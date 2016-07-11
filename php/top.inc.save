@@ -1,0 +1,287 @@
+<html>
+
+<head>
+<title>     This space for rent     </title>
+<link href="style/trg_style.css" rel="stylesheet" type="text/css">
+
+<STYLE>
+#menuOut, #menuIn
+{
+position:absolute;
+left:-155px;
+width:160px;
+top:170px;
+border:1.5px solid green;
+background-color:yellow;
+layer-background-color:yellow;
+font:bold 12px Verdana;
+line-height:20px;
+}
+</STYLE>
+
+<SCRIPT LANGUAGE="JavaScript">
+<!-- Begin
+function regenerate() {
+window.location.reload();
+}
+function regenerate2() {
+if (document.layers)
+setTimeout("window.onresize=regenerate", 400);
+}
+window.onload = regenerate2;
+if (document.all) {
+document.write('</div>');
+slideMenu = document.all.menuIn.style;
+boundryR = 0;
+boundryL = -150;
+}
+else {
+slideMenu = document.layers.menuOut;
+boundryR = 150;
+boundryL = 10;
+}
+function pull() {
+if (window.drawMenu)
+clearInterval(drawMenu);
+pullMenu = setInterval("pullEngine()", 50);
+}
+function draw() {
+clearInterval(pullMenu);
+drawMenu = setInterval("drawEngine()", 50);
+}
+function pullEngine() {
+if (document.all && slideMenu.pixelLeft < boundryR)
+slideMenu.pixelLeft += 5;
+else if(document.layers && slideMenu.left < boundryR)
+slideMenu.left += 5;
+else if (window.pullMenu)
+clearInterval(pullMenu);
+}
+function drawEngine() {
+if (document.all && slideMenu.pixelLeft > boundryL)
+slideMenu.pixelLeft -= 5;
+else if(document.layers && slideMenu.left > boundryL)
+slideMenu.left -= 5;
+else if (window.drawMenu)
+clearInterval(drawMenu);
+}
+//  End -->
+</script>
+
+<SCRIPT LANGUAGE="JavaScript">
+
+<!-- This script and many more are available free online at -->
+<!-- The JavaScript Source!! http://javascript.internet.com -->
+
+<!-- Begin
+
+DATA FOR TOP NAV BAR
+image1 = new Image();
+image1.src = "buttons/top_nav_bar/home_on.gif";
+image2 = new Image();
+image2.src = "buttons/top_nav_barapple_cpus_on.gif";
+image3 = new Image();
+image3.src = "buttons/top_nav_bar/specials_on.gif";
+image4 = new Image();
+image4.src = "buttons/top_nav_bar/storage_on.gif";
+image5 = new Image();
+image5.src = "buttons/top_nav_bar/peripherals_on.gif";
+image6 = new Image();
+image6.src = "buttons/top_nav_bar/upgrades_on.gif";
+image7 = new Image();
+image7.src = "buttons/top_nav_bar/software_on.gif";
+image8 = new Image();
+image8.src = "buttons/top_nav_bar/support_on.gif";
+image9 = new Image();
+image9.src = "buttons/top_nav_bar/contact_us_on.gif";
+
+DATA FOR BOTTOM NAV BAR
+image1a = new Image();
+image1a.src = "buttons/top_nav_bar/home_on.gif";
+image2a = new Image();
+image2a.src = "buttons/top_nav_barapple_cpus_on.gif";
+image3a = new Image();
+image3a.src = "buttons/top_nav_bar/specials_on.gif";
+image4a = new Image();
+image4a.src = "buttons/top_nav_bar/storage_on.gif";
+image5a = new Image();
+image5a.src = "buttons/top_nav_bar/peripherals_on.gif";
+image6a = new Image();
+image6a.src = "buttons/top_nav_bar/upgrades_on.gif";
+image7a = new Image();
+image7a.src = "buttons/top_nav_bar/software_on.gif";
+image8a = new Image();
+image8a.src = "buttons/top_nav_bar/support_on.gif";
+image9a = new Image();
+image9a.src = "buttons/top_nav_bar/contact_us_on.gif";
+
+// End -->
+</script>
+</head>
+
+<body>
+
+<!-- START THE TABLE UP HERE TO CONTAIN THE MAIN NAV BUTTONS -->
+
+<table border=0 cellspacing=0 cellpadding=0 width=769>
+
+<tr>
+<td class="topCenter" rowspan=2>
+<img src="images/trg_logo.gif" border="0">
+</td>
+
+<td colspan=11 class="bottom">
+<center>
+<img src="images/header.gif" border="0"><br>
+</center>
+</td>
+</tr>
+
+<tr>
+<td class="topCenter">
+<img src="buttons/top_nav_bar/left_end.gif" border="0">
+</td>
+
+<td class="topCenter">
+<a href="home.html" onmouseover="image1.src='buttons/top_nav_bar/home_on.gif';"
+onmouseout="image1.src='buttons/top_nav_bar/home_off.gif';">
+<img name="image1" src="buttons/top_nav_bar/home_off.gif" border=0></a>
+</td>
+
+<td class="topCenter">
+<a href="apple_cpus/apple_cpus.html" onmouseover="image2.src='buttons/top_nav_bar/apple_cpus_on.gif';"
+onmouseout="image2.src='buttons/top_nav_bar/apple_cpus_off.gif';">
+<img name="image2" src="buttons/top_nav_bar/apple_cpus_off.gif" border=0></a>
+</td>
+
+<td class="topCenter">
+<a href="specials/specials.html" onmouseover="image3.src='buttons/top_nav_bar/specials_on.gif';"
+onmouseout="image3.src='buttons/top_nav_bar/specials_off.gif';">
+<img name="image3" src="buttons/top_nav_bar/specials_off.gif" border=0></a>
+</td>
+
+<td class="topCenter">
+<a href="storage/storage.html" onmouseover="image4.src='buttons/top_nav_bar/storage_on.gif';"
+onmouseout="image4.src='buttons/top_nav_bar/storage_off.gif';">
+<img name="image4" src="buttons/top_nav_bar/storage_off.gif" border=0></a>
+</td>
+
+<td class="topCenter">
+<a href="peripherals/peripherals.html" onmouseover="image5.src='buttons/top_nav_bar/peripherals_on.gif';"
+onmouseout="image5.src='buttons/top_nav_bar/peripherals_off.gif';">
+<img name="image5" src="buttons/top_nav_bar/peripherals_off.gif" border=0></a>
+</td>
+
+<td class="topCenter">
+<a href="upgrades/upgrades.html" onmouseover="image6.src='buttons/top_nav_bar/upgrades_on.gif';"
+onmouseout="image6.src='buttons/top_nav_bar/upgrades_off.gif';">
+<img name="image6" src="buttons/top_nav_bar/upgrades_off.gif" border=0></a>
+</td>
+
+<td class="topCenter">
+<a href="software/software.html" onmouseover="image7.src='buttons/top_nav_bar/software_on.gif';"
+onmouseout="image7.src='buttons/top_nav_bar/software_off.gif';">
+<img name="image7" src="buttons/top_nav_bar/software_off.gif" border=0></a>
+</td>
+
+<td class="topCenter">
+<a href="support/support.html" onmouseover="image8.src='buttons/top_nav_bar/support_on.gif';"
+onmouseout="image8.src='buttons/top_nav_bar/support_off.gif';">
+<img name="image8" src="buttons/top_nav_bar/support_off.gif" border=0></a>
+</td>
+
+<td class="topCenter">
+<a href="contact_us/contact_us.html" onmouseover="image9.src='buttons/top_nav_bar/contact_us_on.gif';"
+onmouseout="image9.src='buttons/top_nav_bar/contact_us_off.gif';">
+<img name="image9" src="buttons/top_nav_bar/contact_us_off.gif" border=0></a>
+</td>
+
+<td class="topCenter">
+<img src="buttons/top_nav_bar/right_end.gif" border="0">
+</td>
+</tr>
+
+<!-- END OF NAV TABLE, MOVE ON TO THE MAIN BODY TABLE -->
+
+<tr>
+<td rowspan=3 class="bottom">
+
+<!-- WHILE I DON'T LIKE PEOPLE LOOKING AT MY CODE, IF YOU CAN READ THIS, THIS IS WHERE WE ARE GOING TO PUT THE SIDEBAR PROGRAMMING -->
+
+<!-- APPLE SECTION -->
+<a href="http://www.apple.com">
+<img src="buttons/side_nav_bar/apple.gif" border=0></a><br>
+
+<!-- BROWSE SECTION -->
+<a href="browse/browse.html">
+<img src="buttons/side_nav_bar/browse.gif" border=0></a><br>
+<a href="browse/our_story.html">
+<img src="buttons/side_nav_bar/our_story_off.gif" border=0></a><br>
+<a href="browse/our_store.html">
+<img src="buttons/side_nav_bar/our_store_off.gif" border=0></a><br>
+<a href="browse/our_location.html">
+<img src="buttons/side_nav_bar/our_location_off.gif" border=0></a><br>
+<a href="browse/our_services.html">
+<img src="buttons/side_nav_bar/our_services_off.gif" border=0></a><br>
+<a href="browse/brand_new_macs.html">
+<img src="buttons/side_nav_bar/brand_new_macs_off.gif" border=0><br>
+<a href="browse/used_macs.html">
+<img src="buttons/side_nav_bar/used_macs_off.gif" border=0></a><br>
+
+<!-- HOT STUFF SECTION (REALLY, IT SHOULD JUST BE STAFF PHOTOS, BUT WHATEVER -->
+<a href="current_hot_stuff/current_hot_stuff.html">
+<img src="buttons/side_nav_bar/current_hot_stuff.gif" border=0></a><br>
+<a href="current_hot_stuff/in_store_specials.html">
+<img src="buttons/side_nav_bar/in_store_specials_off.gif" border=0></a><br>
+<a href="current_hot_stuff/free_firewire_cdr.html">
+<img src="buttons/side_nav_bar/free_firewire_cdr_off.gif" border=0></a><br>
+<a href="current_hot_stuff/brand_new_g4s.html">
+<img src="buttons/side_nav_bar/brand_new_g4s_off.gif" border=0></a><br>
+
+<!-- ABOUT US SECTION -->
+<a href="about_us/about_us.html">
+<img src="buttons/side_nav_bar/about_us.gif" border=0></a><br>
+<a href="about_us/why_buy_from_us.html">
+<img src="buttons/side_nav_bar/why_buy_from_us_off.gif" border=0></a><br>
+<a href="about_us/shipping_and_returns.html">
+<img src="buttons/side_nav_bar/shipping_and_returns_off.gif" border=0></a><br>
+<a href="about_us/gift_certificates.html">
+<img src="buttons/side_nav_bar/gift_certificates_off.gif" border=0></a><br>
+
+<a href="fun_stuff/fun_stuff.html">
+<img src="buttons/side_nav_bar/fun_stuff.gif" border=0></a><br>
+<a href="fun_stuff/local_activities.html">
+<img src="buttons/side_nav_bar/local_activities_off.gif" border=0></a><br>
+<a href="fun_stuff/clubs_and_organizations.html">
+<img src="buttons/side_nav_bar/clubs_and_organizations_off.gif" border=0></a><br>
+<a href="fun_stuff/our_customers.html">
+<img src="buttons/side_nav_bar/our_customers_off.gif" border=0></a><br>
+<a href="fun_stuff/mac_publications.html">
+<img src="buttons/side_nav_bar/mac_publications_off.gif" border=0></a><br>
+<a href="fun_stuff/mac_stuff_suppliers.html">
+<img src="buttons/side_nav_bar/mac_stuff_suppliers_off.gif" border=0></a><br>
+
+<img src="buttons/side_nav_bar/the_rest.gif" border=0><br>
+</td>
+
+<td width=643 height=1015 colspan=11>
+
+<div id="menuIn" style="left:-150" onMouseover="pull()" onMouseout="draw()">
+<--
+<layer id="menuOut" onMouseover="pull()" onMouseout="draw()">
+
+<a href="index.php">Home</a><br>
+<a href="index.php?action=browse">Browse</a><br>
+<a href="index.php?action=search">Search</a><br>
+<a href="index.php?action=cart">View Cart</a><br>
+<a href="index.php?action=orderhistory">Order History</a><br>
+
+<?php
+echo 'Items in Cart: <br><center>'.$cart['items'].'</center><br>';
+echo 'Order Cost: <br><center>'.number_format($cart['total_price'],2).'</center>';
+?>
+</layer>
+-->
+<table width=597 cellspacing=3 cellpadding=3 border=0>
+<tr>
+<td valign=top width=85%>

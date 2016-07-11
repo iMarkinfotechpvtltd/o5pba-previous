@@ -1,0 +1,78 @@
+<style>
+BODY {
+font-family: sans-serif;
+}
+.page {
+font-size: 10pt; 
+font-weight:bold;
+color: #000000;
+}
+
+.links {
+font-size: 8pt; 
+}
+.dark {
+background-color: #dddddd;
+}
+.light {
+background-color: #eeeeee;
+}
+.red {
+font-size:8pt; 
+font-weight:bold;
+color: #ff0000;
+}
+</style>
+<br><br>
+<center>
+<span class="page">O5PBA Admin Login</span><br>
+<span class="links">Access only to authorized users*</span><br>
+<img src="logo_circle.jpg"><br><br>
+<table width="400" style="border-width:1px;  border-style: solid; border-color: #666666">
+<form  name=main action="?" method="POST">
+
+<?php 
+print_r($_POST);
+echo $this->auth;
+?>
+<tr class="light">
+	<td width="50%">
+		<center>
+		<strong>Username</strong>
+		</center>
+	</td>
+	<td width="50%">
+		<input type="text" name="username" value="<?php if (isset($this->auth["uname"])) print $this->auth["uname"] ?>">
+	</td>
+</tr>
+<tr class="dark">
+	<td width="50%">
+		<center>
+		<strong>Password</strong>
+		</center>
+	</td>
+	<td width="50%">
+		<input type="password" name="password">
+	</td>
+</tr>
+<tr class="light">
+	<td colspan=2>
+	<center>
+		<input type="submit" name="Submit" value="submit">
+	</center>
+	</td>
+	
+</tr>
+</form>
+</table>
+<?php global $username; if ( isset($username) ): ?>
+ <!-- failed login code -->
+
+
+ <span class=red><b>Either your username or your password
+       are invalid.<br>
+       Please try again!</b></span><br><br>
+
+ <?php endif ?>
+ <span class="links">* Your IP address may be logged for security reasons. </span><br>
+</center>

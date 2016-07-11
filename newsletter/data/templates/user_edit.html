@@ -1,0 +1,35 @@
+
+#%info%#
+
+<span class="text13blue"><b>Edit Your Account</b></span><br><br>
+
+<table cellspacing="0" cellpadding="3" border=0 width="500"><tr>
+<td align="center" valign="top">
+
+<table border="0" cellspacing="1" cellpadding="7" width="100%" class="table1"><tbody>
+<tr><td align="center">
+<TABLE cellSpacing=1 cellPadding=2 border=0>
+<form action="subscribe.php" method="post" name="edit">
+<input type="hidden" name="action" value="edited">
+<input type="hidden" name="username" value="#%username%#">
+<input type="hidden" name="password" value="#%password%#">
+<TR>
+  <TD noWrap align="left"><span class="text13">Username: </span></TD>
+  <TD align="left"><span class="text13">#%username%#</span></TD></TR>
+<TR>
+  <TD noWrap align="left"><span class="text13">Password: </span></TD>
+  <TD align="left"><INPUT class="field1" maxLength="15" size="15"  name="newpass" value="#%password%#"></TD></TR>
+<TR>
+  <TD noWrap align="left"><span class="text13">Your Name: </span></TD>
+  <TD align="left"><INPUT class="field1" maxLength="100" size="60" name="name" value="#%name%#"></TD></TR>
+<TR>
+  <TD noWrap align="left"><span class="text13">Email: </span></TD>
+  <TD align="left"><span class="text13">#%email%#<br><i>If your email Address Changes, you must re-subscribe with the new address.</i></SPAN><input type="hidden" name="email" value="#%email%#"></TD></TR>
+<TR>
+  <TD align="center" colspan=3><INPUT type="submit" value="&nbsp;&nbsp;Submit&nbsp;&nbsp;" name="B1" class="button1"></TD></TR>
+</FORM></TABLE></td></tr></table>
+<br>
+<a href="subscribe.php?action=unsubscribe&username=#%username%#&password=#%password%#">Click here to unsubscribe</a>
+<br>
+</td></tr></table>
+<br><br></center></div>

@@ -1,0 +1,6 @@
+
+99.237.194.239-CPE001ff3444d0d-CM000f9faa6d22.cpe.net.cable.rogers.com | average.csv | 100.36 KB | 09/20/2011 | 12:01:43 AM
+99.237.194.239-CPE001ff3444d0d-CM000f9faa6d22.cpe.net.cable.rogers.com | average.csv | 30.65 KB | 09/20/2011 | 12:09:07 AM
+99.237.194.239-CPE001ff3444d0d-CM000f9faa6d22.cpe.net.cable.rogers.com | average.csv | 68.08 KB | 09/20/2011 | 12:50:23 AM
+99.237.194.239-CPE001ff3444d0d-CM000f9faa6d22.cpe.net.cable.rogers.com | average.csv | 54.96 KB | 09/20/2011 | 01:06:50 AM
+174.112.24.135-CPE000f66010fee-CM000a7362b6e5.cpe.net.cable.rogers.com | average.csv | 665 Bytes | 09/20/2011 | 05:06:24 PM

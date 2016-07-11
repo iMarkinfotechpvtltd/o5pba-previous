@@ -1,0 +1,10 @@
+Dear #%name%#,
+
+YOUR TEXT HERE
+
+Regards
+
+Webmaster
+
+To unsubscribe or to modify your profile please go to #%login%#
+

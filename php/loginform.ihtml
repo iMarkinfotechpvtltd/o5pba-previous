@@ -1,0 +1,39 @@
+<?php
+include("./includes/top.inc");
+?>
+<table border="0" cellspacing="1" cellpadding="0" width="100"><tr><td><b>Main</b></td></tr>
+  <tr bgcolor="#666699"><td><a href="../index.php" class="menu">Home</a></td></tr>
+  <tr bgcolor="#666699"><td><a href="register_m.php" class="menu">Register</a></td></tr>
+  <tr bgcolor="#666699"><td><a href="menu.php" class="menu">Login</a></td></tr>
+  <tr><td><b>Other</b></td></tr>
+  <tr bgcolor="#666699"><td>E-mail</td></tr>
+  <tr bgcolor="#666699"><td>About</td></tr>
+  <tr bgcolor="#666699"><td>Contact</td></tr>
+  </table>
+
+</td><td width="10"></td><td width="640" valign="top">
+<form action="<?php print $sess->url("menu.php") ?>" method=post>
+<center><h3>Please Logon</h3>
+<table border=0><tr bgcolor="#C3C3C3">
+<td>Username:</td>
+<td><input type="text" name="username"
+  value="<?php if (isset($this->auth["uname"])) print $this->auth["uname"] ?>"
+  size=32 maxlength=32></td></tr>
+<tr bgcolor="#C3C3C3"><td>Password:</td><td>
+<input type="password" name="password" size=32 maxlength=32></td></tr></table>
+<input type="submit" name="submit" value="Login now"></form>
+
+
+ <?php global $username; $logintest=true; if ( isset($username) ): ?>
+ <!-- failed login code -->
+ <font color="red"><b>
+ Either your username or your password
+       are invalid.<br>
+       Please try again!</b></font>
+
+ <?php endif?>
+
+<?php
+ include("../members/includes/bottom.inc");
+ ?>
+<!-- $Id: loginform.ihtml,v 1.2 1998/10/14 13:00:38 kk Exp $ -->

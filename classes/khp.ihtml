@@ -1,0 +1,56 @@
+<?php
+	if (file_exists('./menu.inc')) {
+		include ('./menu.inc');
+	} 
+?>
+<table width=600 border=0>
+
+<th colspan=4>
+<?php echo $this->titles.' '.$this->db->f('title'); ?>
+</th></tr>
+
+<tr><td width=300 bgcolor=F2F2F2>
+<p><font size="2">Dates:</font>
+</td><td bgcolor=F2F2F2 colspan=2>
+
+<p><font size="2">Information:</font></p>
+
+
+</td></td>
+
+<tr><td>
+<?php
+$this->listdates($this->db->f('created').'_d');
+?>
+</td><td rowspan=3 colspan =1 >
+<?php
+$this->listitems($this->db->f('created').'_i');
+
+?>
+</td></tr>
+
+<tr><td bgcolor=F2F2F2>
+
+<p><font size="2"><? $this->resultstitle($this->db->f('created')); ?></font><br>
+</td></tr>
+<tr><td rowspan=2>
+<?php
+$this->listitems($this->db->f('created').'_z','Zone');
+
+$this->listitems($this->db->f('created').'_r','Regionals');
+
+$this->listitems($this->db->f('created').'_p','Provincial');
+
+$this->listitems($this->db->f('created').'_n','Nationals');
+
+$this->listitems($this->db->f('created').'_m','Minutes');
+
+?>
+ </td></tr><tr><td> <?php
+$this->photoitems($this->db->f('created').'_ph','Photo Album');
+
+?>
+ 
+</td></tr>
+
+</table>

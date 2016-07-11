@@ -1,0 +1,8 @@
+<?php
+echo '</td></tr>';
+echo '<tr><td valign=top><hr>Items in Cart: <br><center>'.$cart['items'].'</center><br>';
+echo 'Order Cost: <br><center>'.number_format($cart['total_price'],2).'</center></hr></td></tr>';
+echo '</table>';
+echo '</body>';
+echo '</html>';
+?>

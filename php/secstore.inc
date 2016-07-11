@@ -1,0 +1,5288 @@
+<?php
+
+
+
+// Initiate connection to database
+// userid and password should be stored in a separate, non-public file and be
+// include()'d here.
+
+$provinces = array( array("value"=>"0", "label" => "Select a Province, Territory or State"),
+array("value"=>"0", "label" => "-------------[ Canada ]--------------"),
+array("value"=>"Alberta", "label" => "Alberta"),
+array("value"=>"British Columbia", "label" => "British Columbia"),
+array("value"=>"Manitoba", "label" => "Manitoba"),
+array("value"=>"New Brunswick", "label" => "New Brunswick"),
+array("value"=>"Newfoundland", "label" => "Newfoundland"),
+array("value"=>"Nova Scotia", "label" => "Nova Scotia"),
+array("value"=>"Northwest Territories", "label" => "Northwest Territories"),
+array("value"=>"Nunavut", "label" => "Nunavut"),
+array("value"=>"Ontario", "label" => "Ontario"),
+array("value"=>"Prince Edward Island", "label" => "Prince Edward Island"),
+array("value"=>"Quebec", "label" => "Quebec"),
+array("value"=>"Saskatchewan", "label" => "Saskatchewan"),
+array("value"=>"Yukon", "label" => "Yukon"),
+array("value"=>"0", "label" => "----------[ United States ]----------"),
+array("value"=>"Alaska", "label" => "Alaska"),
+array("value"=>"Alabama", "label" => "Alabama"),
+array("value"=>"Arkansas", "label" => "Arkansas"),
+array("value"=>"Arizona", "label" => "Arizona"),
+array("value"=>"California", "label" => "California"),
+array("value"=>"Colorado", "label" => "Colorado"),
+array("value"=>"Connecticut", "label" => "Connecticut"),
+array("value"=>"Delaware", "label" => "Delaware"),
+array("value"=>"District of Columbia", "label" => "District of Columbia"),
+array("value"=>"Florida", "label" => "Florida"),
+array("value"=>"Georgia", "label" => "Georgia"),
+array("value"=>"Hawaii", "label" => "Hawaii"),
+array("value"=>"Idaho", "label" => "Idaho"),
+array("value"=>"Illinois", "label" => "Illinois"),
+array("value"=>"Indiana", "label" => "Indiana"),
+array("value"=>"Iowa", "label" => "Iowa"),
+array("value"=>"Kansas", "label" => "Kansas"),
+array("value"=>"Kentucky", "label" => "Kentucky"),
+array("value"=>"Louisiana", "label" => "Louisiana"),
+array("value"=>"Maine", "label" => "Maine"),
+array("value"=>"Maryland", "label" => "Maryland"),
+array("value"=>"Massachusetts", "label" => "Massachusetts"),
+array("value"=>"Michigan", "label" => "Michigan"),
+array("value"=>"Minnesota", "label" => "Minnesota"),
+array("value"=>"Missouri", "label" => "Missouri"),
+array("value"=>"Mississippi", "label" => "Mississippi"),
+array("value"=>"Montana", "label" => "Montana"),
+array("value"=>"Nebraska", "label" => "Nebraska"),
+array("value"=>"Nevada", "label" => "Nevada"),
+array("value"=>"New Hampshire", "label" => "New Hampshire"),
+array("value"=>"New Jersey", "label" => "New Jersey"),
+array("value"=>"New Mexico", "label" => "New Mexico"),
+array("value"=>"New York", "label" => "New York"),
+array("value"=>"North Carolina", "label" => "North Carolina"),
+array("value"=>"North Dakota", "label" => "North Dakota"),
+array("value"=>"Ohio", "label" => "Ohio"),
+array("value"=>"Oklahoma", "label" => "Oklahoma"),
+array("value"=>"Oregon", "label" => "Oregon"),
+array("value"=>"Pennsylvania", "label" => "Pennsylvania"),
+array("value"=>"Rhode Island", "label" => "Rhode Island"),
+array("value"=>"South Carolina", "label" => "South Carolina"),
+array("value"=>"South Dakota", "label" => "South Dakota"),
+array("value"=>"Tennessee", "label" => "Tennessee"),
+array("value"=>"Texas", "label" => "Texas"),
+array("value"=>"Utah", "label" => "Utah"),
+array("value"=>"Vermont", "label" => "Vermont"),
+array("value"=>"Virginia", "label" => "Virginia"),
+array("value"=>"Washington", "label" => "Washington"),
+array("value"=>"West Virginia", "label" => "West Virginia"),
+array("value"=>"Wisconsin", "label" => "Wisconsin"),
+array("value"=>"Wyoming", "label" => "Wyoming" ));
+
+
+
+$countrys = array( "Canada" => "Canada",
+"United States of America" => "United States" );
+
+
+
+$months = array(array("value"=>"", "label"=>"Select Month"),
+
+array("value"=>"01", "label"=>"01 January"),
+array("value"=>"02", "label"=>"02 February"),
+array("value"=>"03", "label"=>"03 March"),
+array("value"=>"04", "label"=>"04 April"),
+array("value"=>"05", "label"=>"05 May"),
+array("value"=>"06", "label"=>"06 June"),
+array("value"=>"07", "label"=>"07 July"),
+array("value"=>"08", "label"=>"08 August"),
+array("value"=>"09", "label"=>"09 September"),
+array("value"=>"10", "label"=>"10 October"),
+array("value"=>"11", "label"=>"11 November"),
+array("value"=>"12", "label"=>"12 December"));
+
+
+
+$years[''] = array("value"=>"0", "label"=>"Select Year");
+
+
+
+for ( $i = 0; $i < 25; $i++ ) {
+	
+	
+	$smuff=$i + date( "Y" );
+	$years[$i] = array("value"=>$smuff, "label"=>$smuff);
+	
+	
+	
+}
+
+
+
+function connect_db()
+
+
+
+{
+	
+	
+	
+	include_once( "dbase.inc" );
+	
+	
+	
+	MYSQL_CONNECT( $db_server, $db_username, $db_password ) OR DIE( "Unable to connect to database" );
+	
+	
+	
+	@MYSQL_SELECT_DB( "$db_name" ) or die( "Unable to select database" );
+	
+	
+	
+}
+
+
+
+function welcome()
+
+
+
+{
+	
+	
+	
+	echo "welcome";
+	
+	
+	
+}
+
+
+
+function loginform( $post = array(), $action, $goto = '', $cart, $valid_user = '' ){
+	
+	global $usertype;
+	echo $usertype;
+	if ( $goto == '' ) {
+		$goto = $post["goto"];
+	}
+	if ( $goto == '' ) {
+		$goto = 'checkout';
+	}
+	$userid = str_replace ( '%', '', $post["userid"] );
+	
+	$password = str_replace ( '%', '', $post["password"] );
+	$cart['_password']=$password;
+	
+	if ( !$valid_user && $action == 'login' && $usertype!='new' && $userid!='' && $password!='') {
+		$query = "select * from contact where E_MAIL like '" . $userid . "' and PASSWORD like '" . $password . "'";
+		$result = mysql_query( $query );
+		if ( mysql_num_rows( $result ) > 0 ){
+			$valid_user = $userid;
+		} else {
+			echo '<h3>Login Error</h3> Please try again.<br>';
+		}
+		exit;
+	}
+	if (strlen($password)<5 && !$valid_user){
+		echo '<h3>Password Must be at least 6 characters';
+		
+		$valid_user='';
+		$usertype='';
+	}
+	if ( $valid_user == ''  && $usertype!='new') {
+		
+		$y = new form;
+		$y -> add_element( array( "type" => "text",
+		"name" => "userid",
+		"value" => $userid ) );
+		
+		$y -> add_element( array( "type" => "password",
+		"name" => "password",
+		"value" => "" ) );
+		
+		$y -> add_element( array( "type" => "hidden",
+		"name" => "goto",
+		"value" => $goto ) );
+		
+		$y -> add_element( array( "type" => "submit",
+		"src" => "next.gif",
+		"name" => "submit",
+		"value" => "Login" ) );
+		
+ ?>
+<table border="0" cellpadding="0" cellspacing="0" width="756">
+<tr>
+<td align="right" valign="bottom" class="TableMixNormal_2" colspan="2">
+<img src="barCHKOUT1.gif" border="0" height="20" width="255" alt="Step 1 of 3"></td>
+</tr>
+</table>
+<table border="0" cellpadding="2" cellspacing="0" width="756">
+<tr>
+<td align="left" valign="middle" class="TableMixNormal_2">
+Welcome to our store. Please enter your eMail address.</td>
+<td class="TableMixBold_3" align="right">&nbsp;</td>
+</tr>
+</table> 
+
+
+<?
+$y -> start( '', '', 'https://secure.trgtech.com/index.php?action=login' );
+
+?><table border="0" cellpadding="5" cellspacing="0" width="756">
+<tr>
+<td valign="top" align="center">
+<div align="center">
+<table border="0" cellpadding="1" cellspacing="0" width="250" class="TableMixBold_1">
+<tr>
+<td class="TableMixBold_1">Welcome</td>
+</tr>
+<tr>
+<td>
+<table border="0" cellspacing="0" width="250" class="TableMixNormal_2">
+<tr>
+<td align="right" valign="middle" width="150" class="TableMixBold_3">eMail:</td>
+<td align="left" noWrap valign="middle" width="225" class="TableMixNormal_3">
+
+<?
+$y -> show_element( "userid" );
+?>
+</td>
+</tr>
+<tr>
+<td align="right" valign="middle" width="150" class="TableMixBold_3"></td>
+<td align="left" noWrap valign="middle" width="225" class="TableMixNormal_3">
+<input type=radio name=usertype value=new> <b>I am a new customer.</b><br>
+(Create your password here.)
+
+</td>
+</tr>
+<tr>
+<td align="right" valign="middle" width="150" class="TableMixBold_3"></td>
+<td align="left" noWrap valign="middle" width="225" class="TableMixNormal_3"><input type=radio name=usertype value=returning><b>I am a returning customer&#44;<br>and my password is&#58;</b></td>
+</tr>
+<tr>
+<td align="right" valign="middle" width="150" class="TableMixBold_3"></td>
+<td align="left" noWrap valign="middle" width="225" class="TableMixNormal_3">
+<?
+$y -> show_element( "password" );
+?>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+</td></tr></table>
+<div align="left">
+<table border="0" cellpadding="0" cellspacing="0" width="756">
+<tr>
+<td align="right" valign="top">
+<table border="0" cellpadding="1" cellspacing="1" width="200" bgcolor="#ffffff">
+<tr>
+<td nobr><a href="http://www.trgtech.com/store/index.php?action=cart"><img src="last.gif" border="0" alt="Go to the Shopping Bag" width="100" height="18"></a></td>
+<td>
+<?
+$y -> show_element( "submit" );
+?>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td class="TableMixNormal_3" valign="top" align="right">(Secure pages can take up to 30 seconds to respond.)</td>
+</div>
+<?
+$y -> finish();
+?>
+
+	<br>Forgot your password? <a href="https://secure.trgtech.com/index.php?action=getpasswd">Click Here</a>
+	</td><td valign=bottom>
+
+<?
+
+	} else {
+		if ($valid_user==''){
+			
+			$query = "select * from contact where E_MAIL like '$userid'";
+			
+			$result = mysql_query( $query );
+			if ( mysql_num_rows( $result ) != 0 ) {
+				
+				echo '<h3>Login Error</h3> User ID already exists.  Please try again.<br>';
+				exit;
+			} else {
+				
+				
+				$valid_user = $userid;
+				
+			}
+			
+		}
+		
+		billing_edit( '', $valid_user, 'bill', $cart);
+		
+		
+	}
+	
+	echo '</td></tr></table>';
+	
+	return $valid_user;
+	
+	
+}
+
+
+
+function order_form( $userid, $cart = array() )
+
+{
+	
+	
+	
+	$a = new form;
+	
+	$b = new form;
+	
+	
+	
+	$a -> add_element( array( "type" => "submit",
+	
+	"src" => "Cancel.gif",
+	
+	"name" => "submit",
+	
+	"value" => "CancelOrder" ) );
+	
+	
+	
+	$a -> add_element( array( "type" => "hidden",
+	
+	"name" => "session_id",
+	
+	"value" => session_id() ) );
+	
+	
+	
+	$b -> add_element( array( "type" => "hidden",
+	
+	"name" => "session_id",
+	
+	"value" => session_id() ) );
+	
+	
+	
+	$b -> add_element( array( "type" => "submit",
+	
+	"src" => "Finish.gif",
+	
+	"name" => "submit",
+	
+	"value" => "Place Order" ) );
+	
+	$a -> start('', '', 'index.php?action=cancelorder');
+	
+	
+	
+	echo '<table border="0" cellpadding="0" cellspacing="0" width="756">
+
+
+
+<tr>
+
+<td align="right" valign="bottom" class="TableMixNormal_2" colspan="2">
+
+<img src="barCHKOUT5.gif" border="0" height="20" width="255" alt="Step 3 of 3"></td>
+
+</tr>
+
+</table>
+
+<table border="0" cellpadding="2" cellspacing="0" width="756">
+
+<tr>
+
+<td align="left" valign="top" class="TableMixNormal_2">
+
+Please verify your order.  To submit it, click Finish.</td>
+
+<td class="TableMixBold_3" align="right" valign="top">&nbsp;</td>
+
+</tr>
+
+</table>
+
+<br>
+
+<table border="0" cellpadding="5" cellspacing="0" width="750">
+
+<tr>
+
+
+
+<td valign="top" align="left" nowrap>
+
+<table border="0" cellpadding="1" cellspacing="0" width="756">
+
+<tr>
+
+<td class="TableMixBold_1">Review Order and Submit</td>
+
+</tr>
+
+<tr>
+
+<td class="TableMixNormal_1" valign="top">';
+	
+	
+	
+	display_userinfo( $cart, $userid );
+	
+	
+	
+	display_cart( $cart, false );
+	
+	
+	
+	echo '</td>
+
+</tr>
+
+</table>
+
+</div>
+
+<div align="left">
+
+<table border="0" cellpadding="0" cellspacing="0" width="756">
+
+<tr>
+
+<td align="right" valign="top">
+
+<table border="0" cellpadding="1" cellspacing="1" width="200" bgcolor="#ffffff">
+
+<tr>
+
+<td>';
+	
+	
+	
+	
+	
+	$a -> show_element( "submit" );
+	
+	
+	
+	$a -> show_element( "session_id" );
+	
+	
+	
+	$a -> finish();
+	
+	
+	
+	echo '</td>
+
+<td>';
+	
+	
+	
+	$b -> start('', '', 'index.php?action=order');
+	
+	
+	
+	$b -> show_element( "session_id" );
+	
+	
+	
+	$b -> show_element( "submit" );
+	
+	
+	
+	$b -> finish();
+	
+	
+	
+	echo '</td>
+
+</tr>
+
+</table>';
+	
+	
+	
+}
+
+
+
+function workwithcart ( $cart = array(), $new, $save, $post = array() ){
+	
+	if ( $new ) {
+		// new item selected
+		if ( $cart[$new] ) {
+			$cart[$new]++;
+		} else {
+			if ( !$post[$new] ) {
+				$cart[$new] = 1;
+			} else {
+				$cart[$new] = $post[$new];
+			}
+		}
+	}
+	if ( $save ) {
+		foreach ( $cart as $prodid => $qty ) {
+			if (strpos($prodid,'_')===false){
+				if ( $post[$prodid] == "0"){
+					unset( $cart[$prodid] );
+				}else{
+					$cart[$prodid] = $post[$prodid];
+				}
+			}
+		}
+	}
+	$cart['_total_price'] = calculate_price( $cart );
+	$cart['_items'] = calculate_items( $cart );
+	$cart['_PST'] = calculate_PST( $cart );
+	$cart['_GST'] = calculate_GST( $cart );
+	$cart['_grand_total'] = $cart['_total_price'] + $cart['_PST'] + $cart['_GST'] + $cart['_Shipping_cost'];
+	
+	return $cart;
+}
+
+
+
+function workcart ( $cart = array() ){
+	if ( $cart['_items'] != 0 ) {
+		display_cart( $cart, true );
+	}else {
+		echo "<p>There are no items in your cart";
+		echo "<hr>";
+	}
+}
+
+function display_cart( $cart = array(), $change ){
+	if ( $change == true ) {
+		$y = new form;
+		$y -> add_element( array( "type" => "hidden",
+		"name" => "action",
+		"value" => "auth" ) );
+		$y -> add_element( array( "type" => "hidden",
+		"name" => "session_id",
+		"value" => session_id() ) );
+		$y -> add_element( array( "type" => "submit",
+		"name" => "submit",
+		"value" => "Place order" ) );
+		echo '<form method = post>';
+		echo '<input type = hidden name = action value = cart>';
+	}
+	
+	echo '<table border="0" cellpadding="0" cellspacing="0" width="756">
+<tr>
+<td align="center" class="TableMixBold_1sml">Item #&nbsp;</td>
+<td align="center" class="TableMixBold_1sml">Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td align="center" class="TableMixBold_1sml">Qty&nbsp;&nbsp;</td>
+<td align="center" class="TableMixBold_1sml">Unit Price</td>
+<td align="center" class="TableMixBold_1sml"></td>
+</tr>';
+	
+	// display each item as a table row
+	foreach ( $cart as $prodid => $qty ) {
+		if ( substr($prodid,0,1) != '_' ) {
+			$item = get_item_details( $prodid );
+			echo "<tr>";
+			echo '<td valign="top" align="center" class="TableMixNormal_3">' . $item["item_id"] . '</td>';
+			echo '<td valign="top" align="left" class="TableMixNormal_3">' . $item["item_name"] . '</a></td>';
+			echo '<td valign="top" align="center" valign="bottom" nowrap  class="TableMixNormal_3">';
+			
+			// if we allow changes, quantities are in text boxes
+			if ( $change == true ) {
+				echo "<input type = \"text\" name = \"$prodid\" value = \"$qty\" size = \"3\">";
+			} else {
+				echo $qty;
+			}
+			echo '</td>';
+			echo '<td valign="top" align="center" nowrap  class="TableMixNormal_3">$' . $item["item_price"] . "</td>\n";
+			echo ' <td valign="top" align="right" valign="bottom" nowrap  class="TableMixNormal_3">$' . number_format( $item["item_price"] * $qty, 2 ) . "</td></tr>\n";
+		}
+    }
+
+echo '<td colspan="4" align="right" class="TableMixBold_3">Sub total:&nbsp;</td><td valign="top" align="right" class="TableMixBold_3">$' . number_format($cart['_total_price'], 2 ) . '&nbsp;&nbsp;&nbsp;</td></tr>';
+
+if ( $change == true ) {
+
+	echo '<tr><td></td><td><input type = hidden name = save value = true>';
+	echo '<input type = submit name = submit value = "update totals"></form></td><td>';
+
+ // This is for when the dns is working right.
+
+        $y -> start( '', '', 'https://secure.trgtech.com/index.php',"_blank" );
+
+ // $y->start();
+
+        $y -> show_element( "action" );
+	$y -> show_element( "session_id" );
+	$y -> show_element( "submit" );
+	$y -> finish();
+
+	echo '</td></tr>';
+
+
+} else {
+
+	echo '<tr>
+	<td colspan="4" align="right" class="TableMixBold_3">';
+	echo $cart['_Shipping_type'];
+	echo ' - Shipping:&nbsp;</td>
+	<td valign="top" align="right" class="TableMixBold_3"> $';
+
+	echo $cart['_Shipping_cost'];
+
+	echo '&nbsp;&nbsp;&nbsp;</td>
+
+	</tr>
+
+<tr>
+
+<td colspan="4" align="right" class="TableMixBold_3">PST (ON only):&nbsp;</td>
+
+<td valign="top" align="right" class="TableMixBold_3">$';
+
+
+
+echo $cart['_PST'];
+
+
+
+echo '&nbsp;&nbsp;&nbsp;</td>
+
+</tr>
+
+<tr>
+
+<td colspan="4" align="right" class="TableMixBold_3">GST (CA only):&nbsp;</td>
+
+<td valign="top" align="right" class="TableMixBold_3">$';
+
+
+
+echo $cart['_GST'];
+
+
+
+echo '&nbsp;&nbsp;&nbsp;</td>
+
+</tr>
+
+<tr>
+
+<td colspan="4" align="right" class="TableMixBold_3"></td>
+
+<td valign="top" align="right" class="TableMixBold_1"></td>
+
+</tr>
+
+<tr>
+
+<td colspan="4" align="right" class="TableMixBold_2">Grand Total:&nbsp;</td>
+
+<td valign="top" align="right" class="TableMixBold_2">$';
+
+
+
+echo $cart['_grand_total'];
+
+
+
+echo '&nbsp;&nbsp;&nbsp;</td>
+
+</tr>';
+
+
+
+}
+
+
+
+echo '</table>';
+
+
+
+}
+
+
+
+function get_item_details( $prodid )
+
+
+
+{
+
+
+
+ // query database for all details for a particular book
+
+    if ( !$prodid || $prodid == "" ) {
+
+
+
+return false;
+
+
+
+         }
+
+
+
+$query = "select * from products where idcode like '$prodid'";
+
+
+
+ $result = @mysql_query( $query );
+
+
+
+ if ( !$result ) {
+
+
+
+return false;
+
+
+
+         }
+
+
+
+$result = @mysql_fetch_array( $result );
+
+
+
+ return $result;
+
+
+
+ }
+
+
+
+function calculate_price( $cart = array() )
+
+{
+
+ // sum total price for all items in shopping cart
+
+    $price = 0.0;
+
+
+
+ if ( is_array( $cart ) )
+
+ {
+
+foreach( $cart as $prodid => $qty )
+
+ {
+
+if ( substr($prodid,0,1) != '_' ) {
+
+$query = "select item_price from products where idcode='$prodid'";
+
+
+
+ $result = mysql_query( $query );
+
+
+
+ if ( $result )
+
+ {
+
+
+
+$row = mysql_fetch_array( $result );
+
+
+
+ $item_price = $row["item_price"];
+
+
+
+ $price += $item_price * $qty;
+
+
+
+ }
+
+
+
+}
+
+
+
+}
+
+
+
+}
+
+
+
+return $price;
+
+
+
+ }
+
+
+
+function calculate_GST( $cart = array() ){
+
+
+
+ // calculate taxes for all items in shopping cart
+
+    $price = 0.0;
+
+	if ($cart["_Bill_COUNTRY"]=='Canada'){
+
+		$price = $cart["_Shipping_cost"]*0.07;
+
+		if ( is_array( $cart ) ){
+
+			foreach( $cart as $prodid => $qty ) {
+
+				if ( substr($prodid,0,1) != '_' ) {
+
+					$query = "select item_price from products where idcode='$prodid'";
+
+					$result = mysql_query( $query );
+
+
+
+					if ( $result ) {
+
+						$row = mysql_fetch_array( $result );
+
+						$item_price = $row["item_price"];
+
+						$price += ($item_price * $qty)*0.07;
+
+					}
+
+				}
+
+			}
+
+		}
+
+	}
+
+	return number_format( $price, 2 );
+
+ }
+
+
+
+function calculate_PST( $cart = array() ){
+
+
+
+ // calculate taxes for all items in shopping cart
+
+    $price = 0.0;
+
+	if ($cart["_Bill_STATE"]=='Ontario'){
+
+		$price = $cart["_Shipping_cost"]*0.08;
+
+		if ( is_array( $cart ) ){
+
+			foreach( $cart as $prodid => $qty ) {
+
+				if ( substr($prodid,0,1) != '_' ) {
+
+					$query = "select item_price from products where idcode='$prodid'";
+
+					$result = mysql_query( $query );
+
+
+
+					if ( $result ) {
+
+						$row = mysql_fetch_array( $result );
+
+						$item_price = $row["item_price"];
+
+						$price += ($item_price * $qty)*0.08;
+
+					}
+
+				}
+
+			}
+
+		}
+
+	}
+
+	return number_format( $price, 2 );
+
+ }
+
+
+
+function calculate_items( $cart = array() )
+
+{
+
+ // sum total items in shopping cart
+
+    $items = 0;
+
+ if ( is_array( $cart ) )
+
+ {
+
+foreach( $cart as $prodid => $qty )
+
+ {
+
+
+
+if ( substr($prodid,0,1) != '_' ) {
+
+
+
+$items += $qty;
+
+
+
+ }
+
+
+
+}
+
+
+
+}
+
+
+
+return $items;
+
+
+
+ }
+
+
+
+function creditmask( $cardnum )
+
+
+
+{
+
+	$last = substr( trim($cardnum), -4 );
+
+	return '****-****-****-' . $last;
+
+ }
+
+
+
+function pastdetail( $valid_user, $id )
+
+
+
+{
+
+
+
+echo '<h1>Order History Details:</h1>';
+
+
+
+ echo '<h3>Order W' . $id . '</h3>';
+
+
+
+echo '<h3>Your Items:</h3><br>';
+
+
+
+echo '<table width=100%>';
+
+
+
+ echo '<tr><td width=80%>Item Name</td>';
+
+
+
+ echo '<td width=10%>Qty.</td>';
+
+
+
+ echo '<td width=10%>Price</td></tr>';
+
+
+
+ $query = "select * from lineitems where invoice_id like 'W$id'";
+
+
+
+ $result = @mysql_query( $query );
+
+
+
+ while ( $items = mysql_fetch_array( $result ) ) {
+
+
+
+// query database for all details for a particular book
+
+
+
+         $idetail = @mysql_query( 'select * from products where item_id like "' . $items['product_id'] . '"' );
+
+
+
+ $item = @mysql_fetch_array( $idetail );
+
+
+
+if ( $items['quantity'] != '0' ) {
+
+
+
+echo '<tr><td width=80%>' . $item['item_name'] . '</td>';
+
+
+
+ echo '<td width=10%>' . $items['quantity'] . '</td>';
+
+
+
+ echo '<td width=10%>' . $item['item_price'] . '</td></tr>';
+
+
+
+ }
+
+
+
+}
+
+
+
+echo '</table>';
+
+
+
+$query = "select * from invoices where invoice_id like '$id'";
+
+
+
+ $result = @mysql_query( $query );
+
+
+
+ $ship = mysql_fetch_array( $result );
+
+
+
+$query = 'select * from contact where CUSTOMER_I like "' . $ship['customer_id'] . '"';
+
+
+
+ $result = @mysql_query( $query );
+
+
+
+ $customer = mysql_fetch_array( $result );
+
+
+
+echo '<hr>';
+
+
+
+ echo '<table width=100%>';
+
+
+
+ echo '<tr><td width=50%>Billing Information</td><td>Payment Information</td></tr>';
+
+
+
+ echo '<tr><td>';
+
+
+
+ echo $customer['CUSTOMER_N'] . ' ' . $customer['CUSTOMER_F'] . '<br>';
+
+
+
+ echo $customer['STREET_ADD'] . '<br>';
+
+
+
+ echo $customer['CITY'] . ', ' . $customer['STATE'] . ' ' . $customer['ZIP_CODE'] . '<br>';
+
+
+
+ echo $customer['COUNTRY'];
+
+
+
+ echo '</td><td>';
+
+
+
+ echo '<b>Your order will appear on the following credit card:</b><br>';
+
+
+
+ echo $customer['NAME_ON_CA'] . '<br>';
+
+
+
+ echo creditmask( $customer['CARD_NUMBE'] ) . '<br>';
+
+
+
+ echo $customer['CARD_TYPE'] . '<br>';
+
+
+
+ echo $customer['EXPIRY_DAT'];
+
+
+
+echo '</td></tr>';
+
+
+
+echo '<tr><td>Shipping Information</td><td></td></tr>';
+
+
+
+ echo '<tr><td>';
+
+
+
+ echo $ship['ship_first'] . ' ' . $ship['ship_last'] . '<br>';
+
+
+
+ echo $ship['ship_address'] . '<br>';
+
+
+
+ echo $ship['ship_city'] . ', ' . $ship['ship_state'] . ' ' . $ship['ship_zip'] . '<br>';
+
+
+
+ echo $ship['ship_country'] . '<br>';
+
+
+
+ echo $customer['PHONE_NUMB'] . '<br>';
+
+
+
+ echo $customer['E_MAIL'];
+
+
+
+ echo '</td><td></td></tr>';
+
+
+
+ echo '</table>';
+
+
+
+ }
+
+
+
+function display_userinfo( $cart, $userid )
+
+
+
+{
+
+
+
+ echo '<table border="0" cellpadding="0" cellspacing="0" width="756">
+
+<tr>
+
+<td align="left" vAlign="top" colspan="4" class="TableMixBold_3">
+
+</td>
+
+</tr>
+
+<tr>
+
+<td align="right" vAlign="top" class="TableMixBold_3" width="140">
+
+Billing Information:&nbsp;</td>
+
+<td align="left" vAlign="top" class="TableMixNormal_3" width="230">';
+
+
+
+echo $cart["_Bill_CUSTOMER_N"] . ' ' . $cart["_Bill_CUSTOMER_F"] . '<br>';
+
+
+
+echo $cart["_Bill_STREET_ADD"] . '<br>';
+
+
+
+echo $cart["_Bill_CITY"] . ', ' . $cart["_Bill_STATE"] . '<br>';
+
+
+
+echo $cart["_Bill_ZIP_CODE"] . '<br>';
+
+
+
+echo $cart["_Bill_COUNTRY"] . '<br>';
+
+
+
+echo $cart["_Bill_E_MAIL"] . '<br>';
+
+
+
+ echo $cart["_Bill_PHONE_NUMB"] . '</td>';
+
+
+
+echo '<td align="right" vAlign="top" class="TableMixBold_3" width="140">
+
+Shipping Information:&nbsp;</td>
+
+<td align="left" vAlign="top" class="TableMixNormal_3" width="230">
+
+Shipping Address<br>';
+
+
+
+echo $cart["_Ship_CUSTOMER_N"] . ' ' . $cart["_Ship_CUSTOMER_F"] . '<br>';
+
+echo $cart["_Ship_STREET_ADD"] . '<br>';
+
+echo $cart["_Ship_CITY"] . ', ' . $cart["_Ship_STATE"] . '<br>';
+
+echo $cart["_Ship_ZIP_CODE"] . '<br>';
+
+echo $cart["_Ship_COUNTRY"] . '</td></tr>';
+
+
+
+echo '<tr>
+
+<td align="left" vAlign="top" colspan="4" class="TableMixBold_3"></td>
+
+</tr>
+
+<tr>
+
+<td align="right" vAlign="middle" class="TableMixBold_3" width="140">
+
+Credit Card Type:&nbsp;</td>
+
+<td align="left" vAlign="top" class="TableMixNormal_3" width="230">' . $cart["_CARD_TYPE"] . '</td>
+
+<td align="right" vAlign="middle" class="TableMixBold_3" width="140">
+
+Card Number:&nbsp;</td>
+
+<td align="left" vAlign="top" class="TableMixNormal_3" width="230">' . creditmask( $cart["_CARD_NUMBE"] ) . '</td>
+
+</tr>
+
+<tr>
+
+<td align="right" vAlign="middle" class="TableMixBold_3" width="140">
+
+Credit Card Expires:&nbsp;</td>
+
+<td align="left" vAlign="top" class="TableMixNormal_3" width="230">' . $cart["_EXPIRY_MONTH"].'/'. $cart["_EXPIRY_YEAR"] . '</td>
+
+<td align="center" vAlign="bottom" class="TableMixNormal_3" width="370" colspan="2">
+
+&nbsp;<i>(Complete card number hidden for security reasons)</i></td>
+
+</tr>
+
+<tr>
+
+<td align="left" vAlign="top" colspan="4" class="TableMixBold_3"><br>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td align="right" vAlign="middle" class="TableMixBold_3" width="140">
+
+Shipping Method:&nbsp;</td>
+
+<td align="left" vAlign="top" class="TableMixNormal_3" width="620" colspan="3">';
+
+echo $cart['_Shipping_type'];
+
+echo '&nbsp;</td>
+
+</tr>
+
+<tr>
+
+<td align="left" vAlign="top" colspan="4" class="TableMixBold_3"><br>
+
+</td>
+
+</tr>
+
+</table>';
+
+
+
+// echo '</td></tr>';
+
+
+
+     }
+
+
+
+function getpassword()
+
+
+
+{
+
+
+
+ $l = new form;
+
+
+
+ $l -> add_element( array( "type" => "text",
+
+
+
+ "name" => "email",
+
+
+
+ "value" => "" ) );
+
+
+
+ $l -> add_element( array( "type" => "hidden",
+
+
+
+ "name" => "action",
+
+
+
+ "value" => "passwd" ) );
+
+
+
+ $l -> add_element( array( "type" => "submit",
+
+
+
+ "name" => "submit",
+
+
+
+ "value" => "Retrive Password" ) );
+
+
+
+ $l -> start();
+
+
+
+echo '<table width=100%><tr><td width="30%" rowspan=3>Retrive Password</td>';
+
+
+
+echo '<td>Email Address';
+
+
+
+ $l -> show_element( "email" );
+
+
+
+ $l -> show_element( "action" );
+
+
+
+echo '</td></tr>';
+
+
+
+echo '<tr><td>';
+
+
+
+ $l -> show_element( "submit" );
+
+
+
+echo '</td></tr></table>';
+
+
+
+ $l -> finish();
+
+
+
+}
+
+
+
+function send_password( $recipient )
+
+
+
+{
+
+
+
+ $query = "select * from contact where E_MAIL like '$recipient'";
+
+
+
+ $result = @mysql_query( $query );
+
+
+
+ if ( mysql_num_rows( $result ) > 0 ) {
+
+
+
+$row = mysql_fetch_array( $result );
+
+
+
+ $passwd = $row["PASSWORD"];
+
+
+
+ $inst = 'User ID: ' . $recipient . "\n";
+
+
+
+ $inst .= 'Password: ' . $passwd . "\n";
+
+
+
+ $msg = join ( '', file ( 'password.txt' ) );
+
+
+
+ $msg = str_replace ( '<<PASSWD HERE>>', $inst, $msg );
+
+
+
+ $msg = "$msg";
+
+
+
+ $sender = 'support@trgtech.com';
+
+
+
+ $subject = 'Your Password';
+
+
+
+ $mailheaders = "From: $sender<> \n";
+
+
+
+ $mailheaders .= "Reply-To: $recipient\n\n";
+
+
+
+ mail( $recipient, $subject, $msg, $mailheaders );
+
+
+
+ $query = 'update contact set CARD_TYPE="" , CARD_NUMBE="" , NAME_ON_CA="" , EXPIRY_DAT="" where E_MAIL like "' . $recipient . '"';
+
+
+
+ echo '<br>Your password has been sent to your email address.';
+
+
+ } else {
+
+
+
+echo 'You do not seem to have purchased through our online store before. Please press the button below to create a new account.<br><br><br><center>';
+
+
+
+ $l = new form;
+
+
+
+ $l -> add_element( array( "type" => "hidden",
+
+ "name" => "action",
+
+ "value" => "checkout" ) );
+
+
+
+ $l -> add_element( array( "type" => "submit",
+
+ "name" => "submit",
+
+ "value" => "New Customer" ) );
+
+
+
+ $l -> start();
+
+
+
+ $l -> show_element( "action" );
+
+
+
+ $l -> show_element( "submit" );
+
+
+
+ $l -> finish();
+
+
+
+ echo '</center>';
+
+
+
+ }
+
+
+
+}
+
+
+
+function send_confirm( $recipient )
+
+
+
+{
+
+
+
+$msg = join ( '', file ( 'confirm.txt' ) );
+
+
+
+$sender = 'sales.desk@trgtech.com';
+
+
+
+$subject = 'Your Web Order';
+
+
+
+$mailheaders = "From: $sender<> \n";
+
+
+
+$mailheaders .= "Reply-To: $recipient\n\n";
+
+
+
+mail( $recipient, $subject, $msg, $mailheaders );
+
+
+
+}
+
+
+
+
+
+
+
+
+function showlist( $search, $start ){
+
+if ( $start == '' ) {
+
+$start = "0";
+
+}
+
+$query = 'select * from categories where catid like "' . $search . '"';
+ $result = @mysql_query( $query );
+ $row = mysql_fetch_array( $result );
+ $cat = $row['catname'];
+ $subcat = $row['subtype'];
+ $thirdcat = $row['ThirdType'];
+ $query = 'select * from products where category_id like "' . $cat . '" and SubType like "'.$subcat . '%" and ThirdType like "'.$thirdcat.'%" order by item_price desc LIMIT '. $start . ', 10';	
+//echo $query;
+$result = @mysql_query( $query ) or die ( print mysql_error() );
+echo 'Click Name/Picture for more details.<br>';
+
+ while ( $row = mysql_fetch_array( $result ) ) {
+
+browsedetail( $row );
+
+}
+
+echo 'For more items in this category, click these pages:<br>';
+
+ page_list( 'select * from products where category_id like "' . $cat . '" and SubType like "'.$subcat.'%" and ThirdType like "'.$thirdcat.'%"', 'browseat', $start, $search );
+
+}
+
+
+
+function page_list( $table, $action, $inbound = "0", $search )
+
+
+
+{
+ $page = 0;
+ $end = false;
+ $results = mysql_query( $table );
+ $max_records = mysql_num_rows( $results );
+ for( $i = ( -80 );$i <= 80;$i = ( $i + 10 ) ) {
+$page = ( ( ( $inbound + $i ) / 10 ) + 1 );
+ if ( $i == -80 && $page > 1 ) {
+            echo '...';
+             }
+if ( $i == 0 ) {
+            echo ' | ' . $page;
+             }elseif ( $page > 0 && $inbound + $i < $max_records ) {
+echo ' | <a href="index.php?action=' . $action . '&inbound=' . ( $inbound + ( $i ) ) . '&cat=' . $search . '">' . $page . '</a>';
+ }
+if ( $inbound + $i < $max_records && $i == 80 ) {
+echo ' | ...';
+ }
+}
+}
+
+
+
+function file_order( $userid, $cart = array(), $ref ){
+
+ $query = "select * from contact where E_MAIL like '$userid'";
+
+ $result = @mysql_query( $query );
+
+ $row = mysql_fetch_array( $result );
+
+ $usernum = $row["CUSTOMER_I"];
+
+ $date = date( "Y-m-d" );
+
+$sess = trim( session_id() );
+
+$total = number_format( $cart["_grand_total"], 2 );
+$fp = fopen ("/home/trg/transaction.txt", "a+");
+
+//contact
+$FMrecordID = join ( '', file ('http://user:g54trg@10.5.1.20/FMPro?-db=Contacts_.fp5&-lay=Contact%20Entry&Contact%20ID=%3Dw'.$usernum.'&-format=test.htm&-max=9&-find') );
+ if ((strlen($FMrecordID)>20)||(strlen($FMrecordID)==0)){
+//it's a new contact, add it to filemaker
+
+	
+$FMupdate='http://user:g54trg@10.5.1.20/FMPro?-DB=Contacts_.fp5&-Lay=Contact%20Entry&-format=new_reply.htm&Contact%20ID=w'.$usernum.'&First%20Name='. urlencode($row['CUSTOMER_N']) . '&Last%20Name=' . urlencode ($row['CUSTOMER_F']) . '&Street%20Address=' . urlencode ($row['STREET_ADD']) . '&CITY=' . urlencode ($row['CITY']) . '&STATE=' . urlencode ($row['STATE']) . '&ZIP%20CODE=' . urlencode ($row['ZIP_CODE']) . '&COUNTRY=' . urlencode ($row['COUNTRY']) . '&-error=new_error.htm&-New';
+//phone number
+join ( '', file ('http://user:g54trg@10.5.1.20/FMPro?-DB=Phone%20Numbers_.fp5&-Lay=View%20As%20List&-format=new_reply.htm&-error=new_error.htm&Customer%20ID=W'.$usernum.'&Phone%20Number='.urlencode($row['PHONE_NUMB']).'&-New'));
+$er = fwrite ($fp,'http://user:44556@10.5.1.20/FMPro?-DB=Phone%20Numbers_.fp5&-Lay=View%20As%20List&-format=new_reply.htm&-error=new_error.htm&Customer%20ID=W'.$usernum.'&Phone%20Number='.urlencode($row['PHONE_NUMB']).'&Phone%20Number%20Type=Home&-New'."\n");
+//email
+join ( '', file('http://user:g54trg@10.5.1.20/FMPro?-DB=Phone%20Numbers_.fp5&-Lay=View%20As%20List&-format=new_reply.htm&-error=new_error.htm&Customer%20ID=W'.$usernum.'&Phone%20Number='.urlencode($userid).'&Phone%20Number%20Type=Email&-New'));
+$er = fwrite($fp,'http://user:44556@10.5.1.20/FMPro?-DB=Phone%20Numbers_.fp5&-Lay=View%20As%20List&-format=new_reply.htm&-error=new_error.htm&Customer%20ID=W'.$usernum.'&Phone%20Number='.urlencode($userid).'&-New'."\n");
+
+}else{
+	$FMupdate ='http://user:g54trg@10.5.1.20/FMPro?-DB=Contacts_.fp5&-Lay=Contact%20Entry&-format=new_reply.htm&-RecID='.trim($FMrecordID).'&First%20Name='. urlencode ($row['CUSTOMER_N']) . '&Last%20Name=' . urlencode ($row['CUSTOMER_F']) . '&Street%20Address=' . urlencode ($row['STREET_ADD']) . '&CITY=' . urlencode ($row['CITY']) . '&STATE=' . urlencode ($row['STATE']) . '&ZIP%20CODE=' . urlencode ($row['ZIP_CODE']) . '&COUNTRY=' . urlencode ($row['COUNTRY']) . '&-error=new_error.htm&-Edit';
+}
+
+join ( '', file ( $FMupdate ) );
+$er = fwrite ($fp, $FMupdate ."\n");
+
+//create invoice
+$query = "insert into invoices values ('', '" . $usernum . "','','','','','','" . $ref . "','','" . $date . "','" . $total . "', '" . $sess . "','" . $first . "','" . $last . "','" . $address . "','" . $city . "','" . $state . "','" . $zip . "','" . $country . "')";
+$result = @mysql_query( $query ) or die ( print mysql_error() );
+ $query = "select invoice_id from invoices where sessid like '$sess' and amount like '$total'";
+$result = @mysql_query( $query ) or die ( print mysql_error() );
+ $result = @mysql_query( $query );
+ $row = mysql_fetch_array( $result );
+ $orderid = $row["invoice_id"];
+ $orderid = 'W' . $orderid;
+
+if (isset($cart['_selDiscType'])){
+	$note.=$cart['_selDiscType'].' - '.$cart['_txtDiscountCode']."\n";
+}
+
+$payment='Name on Card:'.$cart["_Bill_CUSTOMER_N"].' '.$cart["_Bill_CUSTOMER_F"]."\n";
+$payment.='Card #:'.$cart["_CARD_NUMBE"]."\n";
+$payment.='Card Type:'.$cart["_CARD_TYPE"]."\n";
+$payment.='Exp:'.$cart["_EXPIRY_MONTH"].'/'.$cart["_EXPIRY_YEAR"];
+
+$note=urlencode($note);
+$payment=urlencode($payment);
+
+join ( '', file('http://user:g54trg@10.5.1.20/FMPro?-DB=Sales%20Orders_.fp5&-Lay=Invoice%20Entry&-format=new_reply.htm&-error=new_error.htm&Contact%20ID=w'.$usernum.'&Invoice%20ID='.$orderid.'&Billing%20Info='.$payment.'&Notes='.$note.'&-New'));
+$er = fwrite($fp,'http://user:44556@10.5.1.20/FMPro?-DB=Sales%20Orders_.fp5&-Lay=Invoice%20Entry&-format=new_reply.htm&-error=new_error.htm&Contact%20ID=w'.$usernum.'&Invoice%20ID='.$orderid.'&Billing%20Info=&Notes='.$note.'&-New'."\n");
+
+
+
+//line items
+ foreach( $cart as $prodid => $quantity ) {
+
+if ( substr($prodid,0,1) != '_' ) {
+
+$item = get_item_details( $prodid );
+
+ $id = $item['item_id'];
+
+             if ( $id == '' ) {
+
+$id = $prodid;
+
+ }
+
+
+ $query = "insert into lineitems values
+
+              ('$orderid', '$id', $quantity)";
+              
+join ( '', file ('http://user:g54trg@10.5.1.20/FMPro?-DB=Line%20Items_.fp5&-Lay=View%20As%20List&-format=new_reply.htm&-error=new_error.htm&Sales%20Order%20ID='.$orderid.'&Product%20ID='.urlencode($id).'&quantity='.$quantity.'&-New'));
+$er = fwrite ($fp,'http://user:44556@10.5.1.20/FMPro?-DB=Line%20Items_.fp5&-Lay=View%20As%20List&-format=new_reply.htm&-error=new_error.htm&Sales%20Order%20ID='.$orderid.'&Product%20ID='.urlencode($id).'&quantity='.$quantity.'&-New'."\n");
+             
+
+ $result = mysql_query( $query ) or die ( print mysql_error() );
+
+ }
+
+}
+
+
+//shipping
+join ( '', file ('http://user:g54trg@10.5.1.20/FMPro?-DB=Line%20Items_.fp5&-Lay=View%20As%20List&-format=new_reply.htm&-error=new_error.htm&Sales%20Order%20ID='.$orderid.'&Product%20ID='.urlencode($cart['_Shipping_code']).'&quantity=1&Status=Awaiting%20Pickup&-New'));
+$er = fwrite ($fp,'http://user:44556@10.5.1.20/FMPro?-DB=Line%20Items_.fp5&-Lay=View%20As%20List&-format=new_reply.htm&-error=new_error.htm&Sales%20Order%20ID='.$orderid.'&Product%20ID='.urlencode($cart['_Shipping_code']).'&quantity=1&Status=Awaiting%20Pickup&-New'."\n");
+
+
+
+    foreach( $cart as $prodid => $quantity ) {
+
+$secret = @mysql_fetch_array( @mysql_query( 'select * from products where item_id like "' . $items['product_id'] . '"' ) );
+
+ if ( $temp = stristr( $secret['category_id'], "computer" ) ) {
+
+$computer = 'Your order contains a computer.  You need to call TRG at either 905.841.9966 or 1.877.941.9966 for special details about your order.';
+
+             }
+
+}
+
+
+
+$er = fclose ( $fp );
+
+send_confirm( $userid );
+
+ session_destroy ();
+
+ return $computer;
+
+ }
+
+
+
+function suckinfile( $action )
+{
+ if ($_SERVER['PHP_SELF']=='/index.php'){
+ 	
+ 	include('home.html');	
+ 	 	
+ }else{
+ $file = join ( '', file ( $action ) );
+
+	if($action=='used_macs.html'){
+		echo '<table width=500><tr><td>';
+        	echo '<b><font size =4>Rock-solid pre-owned systems</font></b><br>Our selection ranges from the early nineties to a month ago, all at fantastic prices! Unlike the ones you see';
+echo'<br> in the classifieds, our pre-owned Macintosh systems are tested into the ground by Apple-certified technicians.<br>'; 
+        	echo '</td></tr></table>';
+	}
+
+ $file = str_replace ( '<html>', '<tony>', $file );
+ $file = str_replace ( '</html>', '</tony>', $file );
+ $file = str_replace ( '<body', '<bdy', $file );
+ $file = str_replace ( '</body>', '</bdy>', $file );
+ $file = str_replace ( '<head>', '<winston>', $file );
+ $file = str_replace ( '</head>', '</winston>', $file );
+
+ echo $file;
+ }
+}
+
+
+
+function cleanupfile( $file )
+{
+$file = str_replace ( '&#38;', '_', $file );
+ $file = str_replace ( '&#38', '_', $file );
+ $file = str_replace ( '&', '_', $file );
+ $file = str_replace ( ';', '_', $file );
+ $file = str_replace ( '/', '_', $file );
+ $file = str_replace ( '(', '_', $file );
+ $file = str_replace ( '\\', '_', $file );
+ $file = str_replace ( ')', '_', $file );
+ $file = str_replace ( ' ', '_', $file );
+ $file = str_replace ( "\n", '_',$file);
+return $file;
+
+
+
+}
+
+
+
+function cleanupdetails( $text )
+
+
+
+{
+
+
+
+$text = str_replace ( '&lt;', '<', $text );
+
+
+
+ $text = str_replace ( '&gt;', '>', $text );
+
+
+
+ $text = str_replace ( '&amp;', '&', $text );
+
+
+
+return $text;
+
+
+
+}
+
+
+
+function itemdetail( $post = array() ){
+
+$prodid = $post["id"];
+$item = get_item_details( $prodid );
+echo '<table width=100% border=1><tr><td width="30%">';
+$file = '/products/' . cleanupfile( $item["item_id"] ) . '.jpg';
+// echo $file;
+     if ( file_exists( '/home/trg/public_html' . $file ) ) {
+$size = GetImageSize ( '/home/trg/public_html' . $file );
+ echo '<img src="' . $file . '" ' . $size[3] . '">';
+} else {
+echo '<center><font size=2><b>No Image Currently</b></font></center>';
+ }
+echo '</td><td>';
+ echo 'Product Name: ' . $item["item_name"] . '<br>';
+ echo 'Product #: ' . $item["item_id"] . '<br>';
+if ( $item['item_price'] == '0.00' ) {
+echo 'Price / Unit: <a href="http://www.trgtech.com/browse/index.php?action=our_location.html">Contact Us for pricing</a><br>';
+ } else {
+echo 'Price / Unit: :' . $item['item_price'] . ':<br>';
+ }
+if ( $item['shipcost'] != '0.00' ) {
+echo 'Shipping / Unit: ' . $item['shipcost'] . '<br>';
+ }
+quickadd( $item["item_id"] );
+ echo '</td></tr>';
+echo '<tr><td colspan=2>Description:<br>'. $item['item_description'];
+ echo '</td></tr>';
+echo '</table>';
+ quickadd( $item["item_id"] );
+ echo '</td></tr>';
+}
+
+
+
+function searchform(){
+
+ $l = new form;
+ $l -> add_element( array( "type" => "text",
+ "name" => "value",
+ "value" => "" ) );
+ $l -> add_element( array( "type" => "hidden",
+ "name" => "action",
+ "value" => "showsearch" ) );
+ $l -> add_element( array( "type" => "submit",
+ "name" => "submit",
+ "value" => "Search" ) );
+ $l -> start();
+echo '<table width=100%><tr><td width="30%" rowspan=3>Search</td>';
+echo '<td>Search For';
+ $l -> show_element( "value" );
+echo '</td></tr>';
+echo '<tr><td>';
+ $l -> show_element( "action" );
+ $l -> show_element( "submit" );
+echo '</td></tr></table>';
+ $l -> finish();
+}
+
+
+
+function cleanuplable( $current )
+
+
+
+{
+
+
+
+ if ( $current == '0' ) {
+
+
+
+$new = 'item_id';
+
+
+
+ } elseif ( $current == '1' ) {
+
+
+
+$new = 'category_id';
+
+
+
+ } elseif ( $current == '2' ) {
+
+
+
+$new = 'item_name';
+
+
+
+ } elseif ( $current == '3' ) {
+
+
+
+$new = 'item_description';
+
+
+
+ } elseif ( $current == '4' ) {
+
+
+
+$new = 'vendor_id';
+
+
+
+ } elseif ( $current == '5' ) {
+
+
+
+$new = 'vendor_part';
+
+
+
+ } elseif ( $current == '6' ) {
+
+
+
+$new = 'item_price';
+
+
+
+ } elseif ( $current == '7' ) {
+
+
+
+$new = 'shipcost';
+
+
+
+ } elseif ( $current == '8' ) {
+
+
+
+$new = 'taxcode';
+
+
+
+ } elseif ( $current == '9' ) {
+
+
+
+$new = 'status';
+
+
+
+ } elseif ( $current == '10' ) {
+
+
+
+$new = 'deleted';
+
+
+
+ }
+
+
+
+return $new;
+
+
+
+
+
+}
+
+
+
+function browsedetail( $post = array() ){
+
+$prodid = $post["id"];
+ if ( $prodid == 0 ) {
+	$prodid = $post["idcode"];
+ }
+$item = get_item_details( $prodid );
+ $query = 'select * from categories where catname like "' . $item["category_id"] . '"';
+ $result = @mysql_query( $query );
+ $row = mysql_fetch_array( $result );
+ $catid = $row['catid'];
+echo '<table width=100% border=0>';
+ echo '<tr><td rowspan=4 width=75><a href="index.php?action=details&id=' . $item["idcode"] . '">';
+$file = '/products/' . cleanupfile( $item["item_id"] ) . '.jpg';
+if ( file_exists( '/home/trg/public_html' . $file ) ) {
+
+// echo $file;
+
+        $size = GetImageSize ( '/home/trg/public_html' . $file );
+ if ( $size[0] > $size[1] ) {
+$width = 72;
+ $height = 72 / $size[0] * $size[1];
+ } else {
+$height = 72;
+ $width = 72 / $size[1] * $size[0];
+ }
+echo '<img src="' . $file . '" width=' . $width . ' height=' . $height . '>';
+ } else {
+
+
+
+echo '<center><font size=2><b>No Image Currently</b></font></center>';
+
+
+
+ }
+
+
+
+echo '</a></td>';
+
+
+
+echo '<td width = 300 class=topLeft><font size=3>Part#: '.$item["item_id"].'<br><br><a href="index.php?action=details&id='. $item["idcode"]. '">' . cleanupdetails( $item["item_name"]) . '</a></td>';
+
+echo '<td width=20% class=topLeft><center>$' . $item['item_price'] . '</center></td><td class=topLeft>';
+
+
+
+ quickadd( $item["item_id"] );
+
+
+
+ echo '</td></tr>';
+
+
+
+echo '</table><hr>';
+
+
+
+}
+
+
+
+function searchquery( $post = array() ){
+global $cart;
+
+	$wher = '(item_name like "%' . $post['value'] . '%")';
+		 $wher .= ' or ';
+		 $wher .= '(item_id like "' . URLDECODE( $post['value'] ) . '")';
+		 $wher .= ' or ';
+		 $wher .= '(vendor_part like "' . URLDECODE( $post['value'] ) . '")';
+		 $wher .= ' or ';
+		 $wher .= '(vendor_part like "%' . $post['value'] . '%")';
+		 $wher .= ' or ';
+		 $wher .= '(item_id like "%' . $post['value'] . '%")';
+		 $wher .= ' or ';
+		 $wher .= '(vendor_id like "%' . $post['value'] . '%")';
+		 $wher .= ' or '; 
+		 $wher .= '(category_id like "%' . $post['value'] . '%")';
+
+if (strpos(strtolower($cart['_store']),'5pba')!==false){
+	$wher = '(' . $wher;
+	$wher .= ') and (category_id like "' . $cart['_store'] . '")';
+}
+
+		 $wher = ' where' . $wher;
+
+
+//  echo 'select * from products' . $wher . ' order by item_price desc;';
+
+    return 'select * from products' . $wher . ' order by item_price desc;';
+
+
+
+}
+
+
+
+
+
+function create_table( $file, $tablename )
+
+
+
+{
+
+
+
+ $a = dbase_open( $file, 0 );
+
+
+
+ $rec = dbase_get_record_with_names( $a, 1 );
+
+
+
+ echo "create table $tablename(";
+
+
+
+ for( $i = 0;$i <= dbase_numfields( $a );$i++ ) {
+
+
+
+list ( $key, $val ) = each ( $rec );
+
+
+
+ echo "$key varchar(255)";
+
+
+
+ if ( $i != dbase_numfields( $a ) ) {
+
+
+
+echo ",<br>";
+
+
+
+ } else {
+
+
+
+echo ')\\g';
+
+
+
+ }
+
+
+
+}
+
+
+
+}
+
+
+
+function import_dbase( $table, $file )
+
+
+
+{
+
+
+
+$inserted = "0";
+
+
+
+$deleted = "0";
+
+
+
+$updated = "0";
+
+
+
+ // create_table($file, $table);
+
+    $a = dbase_open( $file, 0 );
+
+
+
+echo dbase_numrecords( $a ) . ' records to edit.<br>';
+
+
+
+ for( $i = 1; $i <= dbase_numrecords( $a ); $i++ ) {
+
+
+
+$rec = dbase_get_record_with_names( $a, $i );
+
+
+
+ list ( $key, $val ) = each ( $rec );
+
+
+
+ $val1 = '"' . htmlspecialchars ( trim( $val ), ENT_QUOTES ) . '"';
+
+
+
+ $delete = $val1;
+
+
+
+ for( $j = 1; $j <= dbase_numfields( $a ); $j++ ) {
+
+
+
+list ( $key, $val ) = each ( $rec );
+
+
+
+ $key = cleanuplable( $j );
+
+
+
+ if ( $key == 'status' ) {
+
+
+
+$job = trim( $val );
+
+
+
+ }
+
+
+
+if ( $key != 'deleted' ) {
+
+
+
+$val1 = $val1 . ', "' . htmlspecialchars( trim( $val ), ENT_QUOTES ) . '"';
+
+
+
+}
+
+
+
+}
+
+
+
+if ( $job == 'INSERT' || $job == 'UPDATE' ) {
+
+
+
+$count++;
+
+
+
+ $inserted++;
+
+
+
+ $val1 = '"", ' . $val1;
+
+
+
+ $rSQL = mysql_query( "INSERT INTO $table values ($val1)" ) or die ( print mysql_error() );
+
+
+
+ } elseif ( $job == 'DELETE' ) {
+
+
+
+$count++;
+
+
+
+ $deleted++;
+
+
+
+ $rSQL = mysql_query( "DELETE FROM $table where item_id like $delete" ) or die ( print mysql_error() );
+
+
+
+ } elseif ( $job == 'UPDATE2' ) {
+
+
+
+$count++;
+
+
+
+ $updated++;
+
+
+
+ $rSQL = mysql_query( "INSERT INTO $table values ($val1)" ) or die ( print mysql_error() );
+
+
+
+ } else {
+
+
+
+$count++;
+
+
+
+ $inserted++;
+
+
+
+ $val1 = '"", ' . $val1;
+
+
+
+ $rSQL = mysql_query( "INSERT INTO $table values ($val1)" ) or die ( print mysql_error() );
+
+
+
+ }
+
+
+
+}
+
+
+
+echo $inserted . ' records added.<br>';
+
+
+
+echo $deleted . ' records deleted.<br>';
+
+
+
+echo $updated . ' records updated.<br>';
+
+
+
+echo 'In total ' . $count . ' records changed.<br>';
+
+
+
+unlink ( $file );
+
+
+
+ }
+
+
+
+function do_update()
+
+
+
+{
+
+
+
+ if ( file_exists ( '/home/trg/products.dbf' ) ) {
+
+
+
+$rSQL = mysql_query( "delete from products;" ) or die ( print mysql_error() );
+
+
+
+ import_dbase( 'products', '/home/trg/products.dbf' );
+
+
+
+ }
+
+
+
+// query database for a list of categories
+     $query = "select category_id from products";
+ $result = @mysql_query( $query );
+ if ( !$result )
+ return false;
+$cats = array();
+ while ( $row = mysql_fetch_array( $result ) ) {
+$val = $row['category_id'];
+$cats[$val] = $val;
+}
+$result = @mysql_query( 'DELETE FROM categories' );
+ foreach( $cats as $key => $val )
+ {
+$query = 'insert into categories values ("' . $key . '", "")';
+$result = @mysql_query( $query ) or die ( print mysql_error() );
+}
+
+
+
+texts();
+
+
+
+ // images(0,1000);
+
+
+
+    echo 'Databases imported<br>';
+
+
+
+}
+
+
+
+function browsemenu($cat=''){
+global $cart;
+
+	if (strpos(strtolower($cart['_store']),'5pba')!==false){
+		 $mycat='%'.$cart['_store'].'%" and catid like "'.$cat.'%';
+	}else{
+		 $mycat='%" and catid like "'.$cat.'%" and catname NOT LIKE "%5pba%';
+	}
+
+ $query = sprintf('SELECT * FROM categories WHERE catname LIKE "%s" ORDER BY catname ASC,subtype ASC,ThirdType ASC',$mycat);
+ $result = @mysql_query( $query );
+
+if ($cat!=''){
+	$row = mysql_fetch_array( $result );
+	$query = sprintf('SELECT * FROM categories WHERE catname LIKE "%s" and subtype LIKE "%s"',$row['catname'],$row['subtype']);
+	//echo $query;
+	$result = @mysql_query( $query );
+
+	$cat=array();
+        while ( $row = mysql_fetch_array( $result ) ) {
+		$cat[$row['catid']]=$row['catid'];
+	}
+	
+        if (strpos(strtolower($cart['_store']),'5pba')!==false){
+                 $mycat='%'.$cart['_store'].'%';
+        }else{
+                 $mycat='%" and catname NOT LIKE "%5pba%';
+        }
+
+	$query = sprintf('SELECT * FROM categories WHERE catname LIKE "%s" ORDER BY catname ASC,subtype ASC,ThirdType ASC',$mycat);
+	$result = @mysql_query( $query );
+
+}
+ if ( !$result )
+ return false;
+
+	echo '<table width = 100%><tr><td>';
+	$col=1;
+
+	while ( $row = mysql_fetch_array( $result ) ) {
+			if (($col==1) and substr( strtoupper($row['catname']),0,2) > "CA"){
+				$col=2;
+				echo '</td><td>';
+			}
+			if ($col==2 and ord( strtoupper( $row['catname'] )) > ord ("N")){
+                                $col=3;
+                                echo '</td><td>';
+			}
+			if ($col==3 and substr( strtoupper($row['catname']),0,2) > "PE"){
+				$col=4;
+				echo '</td><td>';
+			}
+
+
+
+		if ( $row['catname'] == $mycat  && $row['subtype']== $subtype) {
+if ($cat[$row['catid']]==$row['catid']){		
+			echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="index.php?action=browseat&cat=' . $row['catid']. '">'. $row['ThirdType'] . '</a><br>';
+}	
+		
+		
+		}elseif($row['catname'] == $mycat  && $row['subtype'] != $subtype) {
+
+			if ($row['ThirdType']=='' ){
+					echo '&nbsp;&nbsp;&nbsp;&nbsp;<a href="index.php?action=browseat&cat=' . $row['catid'] . '">' . $row['subtype'] . '</a><br>';	
+				}else{
+					echo '&nbsp;&nbsp;&nbsp;&nbsp;<a href="index.php?action=subtypes&cat=' . $row['catid']. '">'. $row['subtype'] . '</a><br>';
+if ($cat[$row['catid']]==$row['catid']){
+					echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="index.php?action=browseat&cat=' . $row['catid']. '">'. $row['ThirdType'] . '</a><br>';
+}
+				}
+		
+		
+		}else{
+		
+		
+			if ($row['subtype']=='' ){
+					echo '<br><a href="index.php?action=browseat&cat=' . $row['catid'] . '">' . $row['catname'] . '</a><br>';	
+				}else{
+			if ($row['ThirdType']=='' ){
+					if (strpos(strtolower($row['catname']),'pba')===false){
+						echo  $row['catname'] . '<br>';
+					}
+					echo '&nbsp;&nbsp;&nbsp;&nbsp;<a href="index.php?action=browseat&cat=' . $row['catid'] . '">' . $row['subtype'] . '</a><br>';	
+				}else{
+                                        if (strpos(strtolower($row['catname']),'pba')===false){
+                                                echo  $row['catname'] . '<br>';
+                                        }
+					echo '&nbsp;&nbsp;&nbsp;&nbsp;<a href="index.php?action=browseat&cat=' . $row['catid']. '">'. $row['subtype'] . '</a><br>';
+if ($cat[$row['catid']]==$row['catid']){
+					echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="index.php?action=browseat&cat=' . $row['catid']. '">'. $row['ThirdType'] . '</a><br>';
+}
+				}				}
+		
+		}
+			$mycat=$row['catname'];
+			$subtype=$row['subtype'];
+	}
+	echo '</td></tr></table>';
+}
+
+
+
+function showsearch( $query )
+
+
+
+{
+
+
+
+$result = @mysql_query( $query ) or die ( print mysql_error() );
+
+
+
+ if ( mysql_num_rows( $result ) > 0 )
+
+ {
+
+
+
+while ( $row = mysql_fetch_array( $result ) ) {
+
+
+
+browsedetail( $row );
+
+
+
+}
+
+
+
+} else {
+
+
+
+echo 'No Results Found. Please Search again.';
+
+
+
+ searchform();
+
+
+
+}
+
+
+
+}
+
+
+
+function pastorders( $valid_user )
+
+
+
+{
+
+
+
+echo 'past orders:';
+
+
+
+ $query = 'select * from contact where E_MAIL like "' . $valid_user . '"';
+
+
+
+ $result = @mysql_query( $query );
+
+
+
+ $row = mysql_fetch_array( $result );
+
+
+
+ $val = $row['CUSTOMER_I'];
+
+
+
+ $query = 'select * from invoices where customer_id like "' . $val . '"';
+
+
+
+ $result = @mysql_query( $query );
+
+
+
+echo '<table><tr><td>Order Number</td><td>Date</td></tr>';
+
+
+
+ while ( $row = mysql_fetch_array( $result ) ) {
+
+
+
+echo '<tr><td>';
+
+
+
+echo '<a href="index.php?action=orderdetail&id=' . $row['invoice_id'] . '">';
+
+
+
+echo 'W' . $row['invoice_id'] . '</a></td>';
+
+
+
+echo '<td>' . $row['date'] . '</td></tr>';
+
+
+
+ }
+
+
+
+echo '</table>';
+
+
+
+}
+
+
+
+function winston()
+
+
+
+{
+
+
+
+ echo 'This is to certify that the site you are viewing uses software coded by Winston.';
+
+
+
+ }
+
+
+
+function getimage( $image, $url )
+
+
+
+{
+
+
+
+$f1 = fopen( $url, "r" );
+
+
+
+$stuff = fread( $f1, "1000000" );
+
+
+
+fclose( $f1 );
+
+
+
+$thefile = fopen( '/www/htdocs/products/' . $image . '.jpg', "wb+" );
+
+
+
+fwrite( $thefile, $stuff );
+
+
+
+fclose( $thefile );
+
+
+
+}
+
+
+
+function images( $start, $count )
+{
+
+$file='http://user:g54trg@10.5.1.20/FMPro?-db=Products_.fp5&-lay=Product%20Entry&-format=images.htm&isPicture=1&Sell%20Online=Yes&-max='. 
+$count. '&-skip='. $start. '&-find';
+
+$fcontents = join ( '', file ( $file ) );
+
+ $fcontents = stristr ( $fcontents, '<start>' );
+
+ $fcontents = substr( $fcontents, 7 );
+ $pos = strpos( $fcontents, "<break>" );
+ // echo $pos;
+    while ( $pos != 0 ) {
+$code = substr( $fcontents, 0, $pos );
+ $fcontents = substr( $fcontents, $pos + 7 );
+ $pos = strpos( $fcontents, "<break>" );
+ $img = substr( $fcontents, 0, $pos );
+ $fcontents = substr( $fcontents, $pos + 7 );
+ $pos = strpos( $fcontents, "<break>" );
+ $pic = strpos( $img, "key=&" );
+ if ( $pic == false ) {
+$img = trim( $img );
+// getimage( cleanupfile( $code ), 'http://user:44554426@10.5.1.138/'. $img );
+$images.='http://user:g54trg@10.5.1.20/'.$img."\t/home/trg/public_html/products/".cleanupfile($code).".jpg\n";
+        }
+}
+        $thefile = fopen('/home/trg/public_html/products/images.txt',"wb+");
+        fwrite($thefile, $images);
+        fclose($thefile);
+        echo "now run <br><br><b>perl /home/trg/imagedownloader.pl /home/trg/public_html/products/images.txt &</b>";  
+
+$query= sprintf('update `update` set photos="%s"',time());
+$result = @mysql_query( $query );
+}
+
+function texts(){
+
+ $file = 'http://user:g54trg@10.5.1.20/FMPro?-db=Products_.fp5&-lay=Product%20Entry&-format=texts.htm&Sell%20Online=Yes&-max=9999999&-find';
+
+ $query = join ( '', file ( $file ) );
+ 
+        $thefile = fopen('/home/trg/public_html/products/query.txt',"wb+");
+        fwrite($thefile, $query);
+ 
+        $file = 'http://user:g54trg@10.5.1.20/FMPro?-db=consi%20line%20items_.fp5&-lay=Layout&-format=consign.htm&Sell%20on%20web=Yes&sold%calc=&-max=9999999&-find';
+
+ 	$query = join ( '', file ( $file ) );
+ 
+        fwrite($thefile, $query);
+        fclose($thefile);
+
+echo exec ("mysql -u www -pk1ddy </home/trg/public_html/products/query.txt");
+
+ $query = "select category_id,SubType,ThirdType from products";
+ $result = @mysql_query( $query );
+ if ( !$result )
+ return false;
+
+$cats = array();
+while ( $row = mysql_fetch_array( $result ) ) {
+		$val=$row['category_id'] . $row['SubType'] . $row['ThirdType'];
+	//	$group=$row['category_id'] . $row['SubType'];
+	//	$cats[$group] = array("cat"=>$row['category_id'], "subcat" => $row['SubType'], "thirdtype" => '' );
+		$cats[$val] = array("cat"=>$row['category_id'], "subcat" => $row['SubType'], "thirdtype" => $row['ThirdType'] );
+}
+sort($cats);
+$result = @mysql_query( 'TRUNCATE TABLE `categories`;' );
+ foreach( $cats as $key => $val ) {
+$query = 'insert into categories values ("' . $val['cat'] . '", "'.$val['subcat'].'","'.$val['thirdtype'].'","")';
+$result = @mysql_query( $query ) or die ( print mysql_error() );
+}
+
+
+$query= sprintf('update `update` set consignment="%s"',time());
+$result = @mysql_query( $query );
+$query= sprintf('update `update` set texts="%s"',time());
+$result = @mysql_query( $query );
+
+
+}
+
+
+
+function dnsfix( $cart = array() )
+
+{
+
+ echo '<table width=597><tr><td>';
+
+ echo 'Due to technical difficulties, we cannot currently process your order online.';
+
+ echo 'To place your order, please copy everything below the line into an email, complete';
+
+ echo 'the contact information at the top of the message and send it to';
+
+ echo 'us at sales.desk@trgtech.com .';
+
+ echo '<hr>';
+
+ echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Customer Info</b><br>\n";
+
+ echo "First Name:<br>\n";
+
+ echo "Last Name:<br>\n";
+
+ echo "Street Address:<br>\n";
+
+ echo "City:<br>\n";
+
+ echo "Province:<br>\n";
+
+ echo "Postal Code:<br>\n";
+
+ echo "Country:<br>\n";
+
+ echo "Phone Number:<br>\n";
+
+ echo "Email Address:<br>\n<br>\n";
+
+ echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Shipping Info (Leave BLANK if same as above)</b><br>\n";
+
+ echo "First Name:<br>\n";
+
+ echo "Last Name:<br>\n";
+
+ echo "Address:<br>\n";
+
+ echo "City:<br>\n";
+
+ echo "State:<br>\n";
+
+ echo "Zip:<br>\n";
+
+ echo "Country:<br>\n<br>\n";
+
+ echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Payment Info</b><br>\n";
+
+ echo "Name on Card:<br>\n";
+
+ echo "Card Type<Visa or Mastercard>:<br>\n";
+
+ echo "Card Number:<br>\n";
+
+ echo "Exp. Date:<br>\n<br>\n";
+
+ echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Affiliate Program</b><br>\n";
+
+
+ echo "If you are a member of an organization which has a discount agreement with us, please fill in this section, otherwise leave it blank.  Current affiliates are: 5-pin bowling association.<br>\n";
+
+ echo "Affiliate organization:<br>\n";
+
+ echo "Membership number:<br>\n<br>\n<br>\n";
+
+ echo "Prod. ID  -|-  Name  -|-  Unit Price  -|-  Quantity  -|-  Total Price<br>\n";
+
+ // display each item as a table row
+
+    foreach ( $cart as $prodid => $qty )
+
+ {
+
+if ( substr($prodid,0,1) != '_' ) {
+
+$item = get_item_details( $prodid );
+
+ echo $item["item_id"] . '  -|-  ';
+
+ echo $item["item_name"] . '  -|-  ';
+
+ echo $item["item_price"] . '  -|-  ';
+
+ echo $qty . '  -|-  ';
+
+ echo number_format( $item["item_price"] * $qty, 2 ) . "  -|-  <br>\n";
+
+ }
+
+}
+
+echo "<br>\n<br>\n";
+
+ echo 'Sub total:  $' . number_format( $cart['_total_price'], 2 ) . "<br>\n";
+
+ echo 'Tax total:  $' . number_format( $cart['_total_tax'], 2 ) . "<br>\n";
+
+    echo '</td></tr></table>';
+
+
+
+ }
+
+
+
+function quickadd( $item_id )
+
+
+
+{
+
+
+
+ $query = 'select idcode from products where item_id like "' . $item_id . '"';
+
+
+
+ $result = @mysql_query( $query );
+
+
+
+ if ( !$result ) {
+
+
+
+} else {
+
+
+
+$row = mysql_fetch_array( $result );
+
+
+
+ echo '<form method = post>';
+
+
+
+ echo '<input type = hidden name = action value = cart>';
+
+
+
+ echo '<input type = "text" name = "' . $row['idcode'] . '" size = "3">';
+
+
+
+ echo '<input type = hidden name = new value = "' . $row['idcode'] . '">';
+
+
+
+ echo '<input type = submit name = submit value = "Buy Now"></form>';
+
+
+
+ }
+
+
+
+}
+
+
+
+function chooseship()
+
+
+
+{
+
+
+
+ echo '<h3>Please select shipping method: </h3>';
+
+
+
+ echo '<center>';
+
+
+
+ echo '<table><tr><td>';
+
+
+
+ echo '<form method = post>';
+
+
+
+ echo '<input type = hidden name = action value = order>';
+
+
+
+ echo '<input type = hidden name = "mail" value = "1">';
+
+
+
+ echo '<input type = hidden name = new value = "mail">';
+
+
+
+
+
+ echo '<input type = submit name = submit value = "Postal Mail"></form>';
+
+
+
+echo '</td><td>';
+
+
+
+ echo '<form method = post>';
+
+
+
+ echo '<input type = hidden name = action value = order>';
+
+
+
+ echo '<input type = hidden name = "xpress" value = "1">';
+
+
+
+ echo '<input type = hidden name = new value = "xpress">';
+
+
+
+ echo '<input type = submit name = submit value = "Xpress Post"></form>';
+
+
+
+ echo '</td><td>';
+
+
+
+ echo '<form method = post>';
+
+
+
+ echo '<input type = hidden name = action value = order>';
+
+
+
+ echo '<input type = hidden name = "puro" value = "1">';
+
+
+
+ echo '<input type = hidden name = new value = "Puro">';
+
+
+
+ echo '<input type = submit name = submit value = "Courier"></form>';
+
+
+
+echo '</td></tr></table>';
+
+
+
+ echo '<br><br><br><br><Br><i>';
+
+
+
+ echo "Title and risk of loss to all Product will pass to the customer upon
+
+shipment from TRG's shipping location.  TRG will not issue credits or
+
+replace Products returned due to damage in transit or that are lost in
+
+transit.</i>";
+
+
+
+}
+
+
+
+function billing_edit( $post, $userid, $action, $cart){
+
+     if ( !$userid ) {
+$row = $cart;
+ } else {
+$query = "select * from contact where E_MAIL like '" . $userid . "'";
+ $result = mysql_query( $query );
+ $row = mysql_fetch_array( $result );
+ }
+
+$elements = array( "CUSTOMER_I", "CUSTOMER_N", "CUSTOMER_F", "STREET_ADD", "CITY", "STATE", "ZIP_CODE", "COUNTRY", "PHONE_NUMB", "E_MAIL", "pass1", "pass2", "password" );
+
+global $provinces;
+ global $countrys;
+
+ $f = new form;
+ $error = false;
+ $reason = "";
+ $reason2 = "";
+
+
+
+ $f -> add_element( array( "type" => "hidden",
+ "name" => "CUSTOMER_I",
+ "value" => $row["CUSTOMER_I"]
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "text",
+ "name" => "CUSTOMER_N",
+ "size" => "30",
+ "minlength" => "1",
+ "length_e" => "Please enter First Name",
+ "value" => $row["CUSTOMER_N"]
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "text",
+ "name" => "CUSTOMER_F",
+ "size" => "30",
+ "minlength" => "1",
+ "length_e" => "Please enter Last Name",
+ "value" => $row["CUSTOMER_F"]
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "text",
+ "name" => "STREET_ADD",
+ "size" => "30",
+ "minlength" => "1",
+ "length_e" => "Please enter Address",
+ "value" => $row["STREET_ADD"]
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "text",
+ "name" => "CITY",
+ "size" => "30",
+ "minlength" => "1",
+ "length_e" => "Please enter City",
+ "value" => $row["CITY"]
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "select",
+ "name" => "STATE",
+ "minlength" => "1",
+ "valid_e" => "Please enter Province",
+ "options" => $provinces,
+ "value" => $row["STATE"]
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "text",
+ "name" => "ZIP_CODE",
+ "size" => "10",
+ "minlength" => "5",
+ "length_e" => "Please enter Postal Code",
+ "value" => $row["ZIP_CODE"]
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "select",
+ "name" => "COUNTRY",
+ "options" => $countrys,
+ "value" => $row["COUNTRY"]
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "text",
+ "name" => "PHONE_NUMB",
+ "size" => "30",
+ "valid_regex" => "^[0-9]{3}\-[0-9]{3}\-[0-9]{4}$",
+ "valid_e" => "Incorrect telephone number (xxx-xxx-xxxx).",
+ "minlength" => "1",
+ "length_e" => "Please enter Phone Number (xxx-xxx-xxxx)",
+ "value" => $row["PHONE_NUMB"]
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "hidden",
+ "name" => "E_MAIL",
+ "value" => $userid
+ ) );
+
+
+ $f -> add_element( array( "type" => "hidden",
+ "name" => "password",
+ "value" => $cart['_password']
+ ) );
+
+
+ $f -> add_element( array( "type" => "submit",
+ "src" => "next.gif",
+ "name" => "submit",
+ "value" => "Save" ) );
+
+
+
+if ( $action == 'billedit' ) {
+		$cart['_donebill']='true';
+		$results = $f -> validate( "ok");
+		$f -> load_defaults(  );
+
+		if ( $results != "ok" ) {
+         $error = true;
+ echo "<br>Errors Detected. Please check the items below.";
+ }
+
+
+
+        if ( $results == "ok" ) {
+
+global $rdoUseBillingForShipping;
+global $CUSTOMER_I;
+global $CUSTOMER_N;
+global $CUSTOMER_F;
+global $STREET_ADD;
+global $CITY;
+global $STATE;
+global $ZIP_CODE;
+global $COUNTRY;
+global $PHONE_NUMB;
+global $E_MAIL;
+global $selDiscType;
+global $txtDiscountCode;
+
+$cart['_selDiscType']=$selDiscType;
+$cart['_txtDiscountCode']=$txtDiscountCode;
+
+            if ( $rdoUseBillingForShipping== '0' ) {
+
+$cart["_Bill_CUSTOMER_I"]=$CUSTOMER_I;
+$cart["_Bill_CUSTOMER_N"]=$CUSTOMER_N;
+$cart["_Bill_CUSTOMER_F"]=$CUSTOMER_F;
+$cart["_Bill_STREET_ADD"]=$STREET_ADD;
+$cart["_Bill_CITY"]=$CITY;
+$cart["_Bill_STATE"]=$STATE;
+$cart["_Bill_ZIP_CODE"]=$ZIP_CODE;
+$cart["_Bill_COUNTRY"]=$COUNTRY;
+$cart["_Bill_PHONE_NUMB"]=$PHONE_NUMB;
+$cart["_Bill_E_MAIL"]=$E_MAIL;
+
+
+
+                shipping_edit( '', $userid, '', $cart);
+
+
+
+                } else{
+
+$cart["_Bill_CUSTOMER_I"]=$CUSTOMER_I;
+$cart["_Bill_CUSTOMER_N"]=$CUSTOMER_N;
+$cart["_Bill_CUSTOMER_F"]=$CUSTOMER_F;
+$cart["_Bill_STREET_ADD"]=$STREET_ADD;
+$cart["_Bill_CITY"]=$CITY;
+$cart["_Bill_STATE"]=$STATE;
+$cart["_Bill_ZIP_CODE"]=$ZIP_CODE;
+$cart["_Bill_COUNTRY"]=$COUNTRY;
+$cart["_Bill_PHONE_NUMB"]=$PHONE_NUMB;
+$cart["_Bill_E_MAIL"]=$E_MAIL;
+$cart["_Ship_CUSTOMER_N"]=$CUSTOMER_N;
+$cart["_Ship_CUSTOMER_F"]=$CUSTOMER_F;
+$cart["_Ship_STREET_ADD"]=$STREET_ADD;
+$cart["_Ship_CITY"]=$CITY;
+$cart["_Ship_STATE"]=$STATE;
+$cart["_Ship_ZIP_CODE"]=$ZIP_CODE;
+$cart["_Ship_COUNTRY"]=$COUNTRY;
+
+
+
+                payment_edit( '', $userid, '', $cart);
+
+
+
+                }
+
+
+
+            }
+
+
+
+        }
+
+    if ( $error == true || $action == 'bill' || $action == '' ) {
+
+
+
+      $f -> start( '', '', 'index.php?action=billedit' );
+
+
+
+if ( $error == true ) {
+
+
+
+            $test = $f -> validate( "OK", array( "CUSTOMER_N" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+print '<font color="red">' . $test . '</font><br>';
+
+                }
+
+            $test = $f -> validate( "OK", array( "CUSTOMER_F" ) );
+
+             if ( $test != "OK" ) {
+
+
+
+                print '<font color="red">' . $test . '</font><br>';
+
+               }
+
+
+
+            $test = $f -> validate( "OK", array( "STREET_ADD" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+print '<font color="red">' . $test . '</font><br>';
+
+
+
+ }
+
+
+
+            $test = $f -> validate( "OK", array( "CITY" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+print '<font color="red">' . $test . '</font><br>';
+
+
+
+ }
+
+
+
+            $test = $f -> validate( "OK", array( "STATE" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+print '<font color="red">' . $test . '</font><br>';
+
+
+
+ }
+
+
+
+            $test = $f -> validate( "OK", array( "ZIP_CODE" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+print '<font color="red">' . $test . '</font><br>';
+
+
+
+ }
+
+
+
+            $test = $f -> validate( "OK", array( "COUNTRY" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+print '<font color="red">' . $test . '</font><br>';
+
+
+
+ }
+
+
+
+            $test = $f -> validate( "OK", array( "PHONE_NUMB" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+print '<font color="red">' . $test . '</font><br>';
+
+
+
+ }
+
+
+
+            $test = $f -> validate( "OK", array( "E_MAIL" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+print '<font color="red">' . $test . '</font><br>';
+
+
+
+ }
+
+
+
+}
+
+echo '<table border="0" cellpadding="0" cellspacing="0" width="756">
+
+<tr>
+
+<td align="right" valign="bottom" class="TableMixNormal_2" colspan="2">
+
+<img src="barCHKOUT2.gif" border="0" height="20" width="255" alt="Step 1 of 3"></td>
+
+</tr>
+
+</table>
+
+<table border="0" cellpadding="2" cellspacing="0" width="756">
+
+<tr>
+
+<td align="left" valign="middle" class="TableMixNormal_2">
+
+This is the 2nd step of 5.  Please enter or verify your billing information before proceeding to step 3.</td>
+
+<td class="TableMixBold_3" align="right"></td>
+
+</tr>
+
+
+
+</table>
+
+<table border="0" cellpadding="5" cellspacing="0" width="750">
+
+<tr>
+
+
+
+<td valign="top" align="left" nowrap>
+
+<div align="center">
+
+<table border="0" cellpadding="1" cellspacing="0" width="750" class="TableMixBold_1">
+
+<tr>
+
+<td class="TableMixBold_1">Billing Information (as it appears on your credit card)</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table border="0" cellspacing="0" width="750" class="TableMixNormal_2">
+
+<tr>
+
+<td align="right" valign="middle" class="TableMixNormal_3"><input type="radio" name="rdoUseBillingForShipping" value="1"
+
+checked
+
+></td>
+
+<td align="left" valign="middle" colspan="3" class="TableMixNormal_3">Ship my order to this address.</td>
+
+</tr>
+
+<tr>
+
+<td align="right" valign="middle" class="TableMixNormal_3"><!--<input type="radio" name="rdoUseBillingForShipping" value="0">--></td>
+
+<td align="left" valign="middle" colspan="3" class="TableMixNormal_3">&nbsp;<!--Ship my order to a different address.--></td>
+
+</tr>
+
+<tr>
+
+<td valign="middle" align="right" width="150" class="TableMixBold_3">* First Name:</td>
+
+<td valign="middle" align="left" width="225" class="TableMixNormal_3">';
+
+
+
+ $f -> show_element( "CUSTOMER_I" );
+
+
+
+ $f -> show_element( "action" );
+
+
+
+ $f -> show_element( "CUSTOMER_N" );
+
+
+
+ echo '</td>
+
+<td valign="middle" align="right" width="150" class="TableMixBold_3">* Last Name:</td>
+
+<td valign="middle" align="left" width="225" class="TableMixNormal_3">';
+
+
+
+ $f -> show_element( "CUSTOMER_F" );
+
+
+
+ echo '</td>
+
+</tr>
+
+<tr>
+
+<td valign="middle" align="right" width="150" class="TableMixBold_3">* Billing Address:</td>
+
+<td valign="middle" align="left" width="225" class="TableMixNormal_3">';
+
+
+
+ $f -> show_element( "STREET_ADD" );
+
+
+
+ echo '</td>
+
+<td align="right" valign="middle" width="150" class="TableMixBold_3"></td>
+
+<td align="left" class="TableMixNormal_3" noWrap valign="middle"></td>
+
+</tr>
+
+
+
+<tr>
+
+<td align="right" valign="middle" class="TableMixBold_3">* City:</td>
+
+<td align="left" noWrap valign="middle" width="225" class="TableMixNormal_3">';
+
+
+
+ $f -> show_element( "CITY" );
+
+
+
+ echo '</td>
+
+<td align="right" valign="middle" width="150" class="TableMixBold_3">** Province/State:</td>
+
+<td align="left" noWrap valign="middle" width="225" class="TableMixNormal_3">';
+
+
+
+$f -> show_element( "STATE" );
+
+
+
+ echo '</td>
+
+</tr>
+
+<tr>
+
+<td align="right" valign="middle" width="150" class="TableMixBold_3"><b>*</b>Postal Code/Zip:</td>
+
+<td align="left" valign="middle" width="225" class="TableMixNormal_3">';
+
+
+
+ $f -> show_element( "ZIP_CODE" );
+
+
+
+ echo '</td>
+
+<td align="right" valign="middle" width="150" class="TableMixBold_3">* Country:</td>
+
+<td align="left" noWrap valign="middle" width="225" colspan="2" class="TableMixNormal_3">';
+
+
+
+ $f -> show_element( "COUNTRY" );
+
+
+
+ echo '</td>
+
+</tr>
+
+<tr>
+
+<td align="right" valign="middle" width="150" class="TableMixBold_3">* Phone:</td>
+
+<td align="left" noWrap valign="middle" width="225" class="TableMixNormal_3">';
+
+
+
+ $f -> show_element( "PHONE_NUMB" );
+
+
+
+ echo '</td>
+
+<td align="right" valign="middle" width="150" class="TableMixBold_3"></td>
+
+<td align="left" noWrap valign="middle" width="225" class="TableMixNormal_3"></td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+
+
+</table>
+
+</div>
+
+</td>
+
+</tr>
+
+
+
+<tr>
+
+<td valign="top" align="left" colspan="2">
+
+
+
+<table border="0" cellpadding="1" cellspacing="0" width="750" bgcolor="#000000" class="TableMixBold_1">
+
+<tr>
+
+<td class="TableMixBold_1">Discounts</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table border="0" cellspacing="0" width="750" bgcolor="#FFFFFF">
+
+<tr>
+
+<td valign="middle" align="right" width="150" class="TableMixBold_3">Discount type:</td>
+
+<td valign="middle" align="left" width="600" class="TableMixNormal_3"><select name="selDiscType">
+
+<option value="-">A Discount type if necessary</option>
+
+<option value="Friends Of Bowling">Friends of bowling</option>
+
+</select><br><td valign="middle" align="right" width="150" class="TableMixBold_3">Card Number:</td>
+
+<td valign="middle" align="left" width="600" class="TableMixNormal_3"><input type="Text" name="txtDiscountCode" size="20" maxlength="20" Value="">&nbsp;(If any. Discounts cannot be combined.)</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</td></tr></table>
+
+<div align="left">
+
+<table border="0" cellpadding="0" cellspacing="0" width="756">
+
+<tr>
+
+<td align="right" valign="top">
+
+<table border="0" cellpadding="1" cellspacing="1" width="200" bgcolor="#ffffff">
+
+<tr>
+
+
+
+<td><a href="http://www.trgtech.com/index.php?action=cart"><img src="last.gif" border="0" alt="Go to the Shopping Bag" width="100" height="18"></a></td>
+
+<td>';
+
+
+
+ $f -> show_element( "submit" );
+
+
+
+ echo '</td>
+
+</tr>
+
+</table>';
+
+
+
+ $f -> show_element( "E_MAIL" );
+
+
+
+         $f -> finish();
+
+
+
+ }
+
+
+
+if ( $error == false && $action == 'billedit' ) {
+
+
+
+        if ( $post['CUSTOMER_I'] != '' ) {
+			
+            $query = "update contact set CUSTOMER_N='" . $post['CUSTOMER_N'] . "' , CUSTOMER_F='" . $post['CUSTOMER_F'] . "' , STREET_ADD='" . $post['STREET_ADD'] . "' , CITY='" . $post['CITY'] . "' , STATE='" . $post['STATE'] . "' , ZIP_CODE='" . $post['ZIP_CODE'] . "' , COUNTRY='" . $post['COUNTRY'] . "' , PHONE_NUMB='" . $post['PHONE_NUMB'] . "' , E_MAIL='" . $post['E_MAIL'] . "' ,CARD_TYPE='" . $post['CARD_TYPE'] . "' , CARD_NUMBE='" . $post['CARD_NUMBE'] . "' , NAME_ON_CA='" . $post['NAME_ON_CA'] . "' , EXPIRY_DAT='" . $post['EXPIRY_DAT'] . "' , SHIPPING_N='" . $post['SHIPPING_N'] . "' , SHIPPING_F='" . $post['SHIPPING_F'] . "' , SHIPPING_A='" . $post['SHIPPING_A'] . "' , SHIPPING_C='" . $post['SHIPPING_C'] . "' , SHIPPING_S='" . $post['SHIPPING_S'] . "' , SHIPPING_Z='" . $post['SHIPPING_Z'] . "' , SHIPPING_Y='" . $post['SHIPPING_Y'];
+
+            $query = $query . "' where CUSTOMER_I = '" . $post['CUSTOMER_I'] . "'";
+
+             } else {
+
+            $query = "insert into contact values ('', '" . $post['CUSTOMER_N'] . "' , '" . $post['CUSTOMER_F'] . "' , '" . $post['STREET_ADD'] . "' , '" . $post['CITY'] . "' , '" . $post['STATE'] . "' , '" . $post['ZIP_CODE'] . "' , '" . $post['COUNTRY'] . "' , '" . $post['PHONE_NUMB'] . "' , '" . $post['E_MAIL'] . "' ,'" . $post['password'] . "' , '', '" . $post['CARD_TYPE'] . "' , '" . $post['CARD_NUMBE'] . "' , '" . $post['NAME_ON_CA'] . "' , '" . $post['EXPIRY_DAT'] . "' , '" . $post['SHIPPING_N'] . "' , '" . $post['SHIPPING_F'] . "' , '" . $post['SHIPPING_A'] . "' , '" . $post['SHIPPING_C'] . "' , '" . $post['SHIPPING_S'] . "' , '" . $post['SHIPPING_Z'] . "' , '" . $post['SHIPPING_Y'] . "' , '')";
+
+             }
+
+
+
+        if ( $error == false ) {
+
+
+
+            $result = mysql_query( $query ) or die ( print mysql_error() );
+
+
+
+
+
+             $email = $post['E_MAIL'];
+
+
+
+             $query = "select CUSTOMER_I from contact where E_MAIL like '$email'";
+
+
+
+             $result = @mysql_query( $query );
+
+
+
+             $row = mysql_fetch_array( $result );
+
+
+
+             $usernum = $row["CUSTOMER_I"];
+
+
+
+             }
+
+
+
+        }
+
+return $cart;
+
+    }
+
+
+
+function shipping_edit( $post = array(), $userid, $action, $cart)
+
+
+
+{
+
+     $elements = array( "CUSTOMER_I", "CUSTOMER_N", "CUSTOMER_F", "STREET_ADD", "CITY", "STATE", "ZIP_CODE", "COUNTRY", "PHONE_NUMB", "E_MAIL", "pass1", "pass2", "password" );
+
+
+
+global $provinces;
+
+
+
+ global $countrys;
+
+
+
+ $f = new form;
+
+
+
+ $error = false;
+
+
+
+ $reason = "";
+
+
+
+ $f -> add_element( array( "type" => "text",
+
+ "name" => "CUSTOMER_N",
+
+ "size" => "30",
+
+ "minlength" => "1",
+
+ "length_e" => "Please enter First Name",
+
+ "value" => $cart["_Ship_CUSTOMER_N"]
+
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "text",
+
+ "name" => "CUSTOMER_F",
+
+ "size" => "30",
+
+ "minlength" => "1",
+
+ "length_e" => "Please enter Last Name",
+
+ "value" => $cart["_Ship_CUSTOMER_F"]
+
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "text",
+
+ "name" => "STREET_ADD",
+
+ "size" => "30",
+
+ "minlength" => "1",
+
+ "length_e" => "Please enter Address",
+
+ "value" => $cart["_Ship_STREET_ADD"]
+
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "text",
+
+ "name" => "CITY",
+
+ "size" => "30",
+
+ "minlength" => "1",
+
+ "length_e" => "Please enter City",
+
+ "value" => $cart["_Ship_CITY"]
+
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "select",
+
+ "name" => "STATE",
+
+ "minlength" => "2",
+
+ "length_e" => "Please enter Province",
+
+ "options" => $provinces,
+
+ "value" => $cart["_Ship_STATE"]
+
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "text",
+
+ "name" => "ZIP_CODE",
+
+ "size" => "10",
+
+ "minlength" => "5",
+
+ "length_e" => "Please enter Postal Code",
+
+ "value" => $cart["_Ship_ZIP_CODE"]
+
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "select",
+
+ "name" => "COUNTRY",
+
+ "options" => $countrys,
+
+ "value" => $cart["_Ship_COUNTRY"]
+
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "hidden",
+
+ "name" => "E_MAIL",
+
+ "value" => $userid
+
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "submit",
+
+ "src" => "next.gif",
+
+ "name" => "submit",
+
+ "value" => "Save" ) );
+
+
+
+if ( $action == 'shipedit' ) {
+
+
+
+    $cart['_doneship']='true';
+
+
+
+if ( $userid == '' ) {
+
+
+
+$email = $post['E_MAIL'];
+
+
+
+ $query = "select CUSTOMER_I from contact where E_MAIL like '$email'";
+
+
+
+ $result = @mysql_query( $query );
+
+
+
+ $row = mysql_fetch_array( $result );
+
+
+
+ if ( mysql_num_rows( $result ) != 0 ) {
+
+
+
+echo 'There there is a current user with that emain address, please use a different one.';
+
+
+
+ $error = true;
+
+
+
+ }
+
+
+
+            }
+
+
+
+$results = $f -> validate( "ok" );
+
+
+
+ if ( $results != "ok" ) {
+
+
+
+$f -> load_defaults( );
+
+
+
+ $error = true;
+
+
+
+ echo "<br>Errors Detected. Please check the items below.";
+
+
+
+ }
+
+
+
+        if ( $results == "ok" ) {
+
+global $CUSTOMER_N;
+
+global $CUSTOMER_F;
+
+global $STREET_ADD;
+
+global $CITY;
+
+global $STATE;
+
+global $ZIP_CODE;
+
+global $COUNTRY;
+
+$cart["_Ship_CUSTOMER_N"]=$CUSTOMER_N;
+
+$cart["_Ship_CUSTOMER_F"]=$CUSTOMER_F;
+
+$cart["_Ship_STREET_ADD"]=$STREET_ADD;
+
+$cart["_Ship_CITY"]=$CITY;
+
+$cart["_Ship_STATE"]=$STATE;
+
+$cart["_Ship_ZIP_CODE"]=$ZIP_CODE;
+
+$cart["_Ship_COUNTRY"]=$COUNTRY;
+
+
+
+            payment_edit( '', $userid, '', $cart);
+
+
+
+            }
+
+
+
+}
+
+
+
+if ( $error == true || $action == 'ship' || $action == '' ) {
+
+
+
+$f -> start( '', '', 'index.php?action=shipedit' );
+
+
+
+if ( $error == true ) {
+
+
+
+            $test = $f -> validate( "OK", array( "CUSTOMER_N" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+print '<font color="red">' . $test . '</font><br>';
+
+
+
+ }
+
+
+
+            $test = $f -> validate( "OK", array( "CUSTOMER_F" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+print '<font color="red">' . $test . '</font><br>';
+
+
+
+ }
+
+
+
+            $test = $f -> validate( "OK", array( "STREET_ADD" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+print '<font color="red">' . $test . '</font><br>';
+
+
+
+ }
+
+
+
+            $test = $f -> validate( "OK", array( "CITY" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+print '<font color="red">' . $test . '</font><br>';
+
+
+
+ }
+
+
+
+            $test = $f -> validate( "OK", array( "STATE" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+print '<font color="red">' . $test . '</font><br>';
+
+
+
+ }
+
+
+
+            $test = $f -> validate( "OK", array( "ZIP_CODE" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+print '<font color="red">' . $test . '</font><br>';
+
+
+
+ }
+
+
+
+            $test = $f -> validate( "OK", array( "COUNTRY" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+print '<font color="red">' . $test . '</font><br>';
+
+
+
+ }
+
+
+
+            $test = $f -> validate( "OK", array( "PHONE_NUMB" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+print '<font color="red">' . $test . '</font><br>';
+
+
+
+ }
+
+
+
+            $test = $f -> validate( "OK", array( "E_MAIL" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+print '<font color="red">' . $test . '</font><br>';
+
+
+
+ }
+
+
+
+}
+
+
+
+echo '<table border="0" cellpadding="0" cellspacing="0" width="756">
+
+<tr>
+
+<td align="right" valign="bottom" class="TableMixNormal_2" colspan="2">
+
+<img src="barCHKOUT3.gif" border="0" height="20" width="255" alt="Step 1a of 3"></td>
+
+</tr>
+
+</table>
+
+<table border="0" cellpadding="2" cellspacing="0" width="756">
+
+<tr>
+
+<td align="left" valign="middle" class="TableMixNormal_2">
+
+This is the 3rd step of 5.  Please enter your shipping information before proceeding to step 4.</td>
+
+<td class="TableMixBold_3" align="right">&nbsp;</td>
+
+</tr>
+
+
+
+</table>
+
+<table border="0" cellpadding="5" cellspacing="0" width="750">
+
+<tr>
+
+
+
+<td valign="top" align="left" nowrap>
+
+<div align="center">
+
+<table border="0" cellpadding="1" cellspacing="0" width="750" class="TableMixBold_1">
+
+<tr>
+
+<td class="TableMixBold_1">Shipping Information (as you want it to appear on the mailing label)</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table border="0" cellspacing="0" width="750" class="TableMixNormal_2">
+
+
+
+<tr>
+
+<td valign="middle" align="right" width="150" class="TableMixBold_3">* First Name:</td>
+
+<td valign="middle" align="left" width="225" class="TableMixNormal_3">';
+
+
+
+ $f -> show_element( "CUSTOMER_I" );
+
+
+
+ $f -> show_element( "action" );
+
+
+
+ $f -> show_element( "CUSTOMER_N" );
+
+
+
+ echo '</td>
+
+<td valign="middle" align="right" width="150" class="TableMixBold_3">* Last Name:</td>
+
+<td valign="middle" align="left" width="225" class="TableMixNormal_3">';
+
+
+
+ $f -> show_element( "CUSTOMER_F" );
+
+
+
+ echo '</td>
+
+</tr>
+
+<tr>
+
+<td valign="middle" align="right" width="150" class="TableMixBold_3">* Shipping Address:</td>
+
+<td valign="middle" align="left" width="225" class="TableMixNormal_3">';
+
+
+
+ $f -> show_element( "STREET_ADD" );
+
+
+
+ echo '</td>
+
+<td align="right" valign="middle" width="150" class="TableMixBold_3"></td>
+
+<td align="left" class="TableMixNormal_3" noWrap valign="middle"></td>
+
+</tr>
+
+
+
+<tr>
+
+<td align="right" valign="middle" class="TableMixBold_3">* City:</td>
+
+<td align="left" noWrap valign="middle" width="225" class="TableMixNormal_3">';
+
+
+
+ $f -> show_element( "CITY" );
+
+
+
+ echo '</td>
+
+<td align="right" valign="middle" width="150" class="TableMixBold_3">** Province/State:</td>
+
+<td align="left" noWrap valign="middle" width="225" class="TableMixNormal_3">';
+
+
+
+$f -> show_element( "STATE" );
+
+
+
+ echo '</td>
+
+</tr>
+
+<tr>
+
+<td align="right" valign="middle" width="150" class="TableMixBold_3"><b>*</b>Postal Code/Zip:</td>
+
+<td align="left" valign="middle" width="225" class="TableMixNormal_3">';
+
+
+
+ $f -> show_element( "ZIP_CODE" );
+
+
+
+ echo '</td>
+
+<td align="right" valign="middle" width="150" class="TableMixBold_3">* Country:</td>
+
+<td align="left" noWrap valign="middle" width="225" colspan="2" class="TableMixNormal_3">';
+
+
+
+ $f -> show_element( "COUNTRY" );
+
+
+
+ echo '</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</div>
+
+</td>
+
+</tr>
+
+
+
+<tr>
+
+<td valign="top" align="left" colspan="2">
+
+</td>
+
+</tr>
+
+</table>
+
+</td></tr></table>
+
+<div align="left">
+
+<table border="0" cellpadding="0" cellspacing="0" width="756">
+
+<tr>
+
+<td align="right" valign="top">
+
+<table border="0" cellpadding="1" cellspacing="1" width="200" bgcolor="#ffffff">
+
+<tr>
+
+
+
+<td><a href="index.php?action=bill"><img src="last.gif" border="0" alt="Go to the Shopping Bag" width="100" height="18"></a></td>
+
+<td>';
+
+
+
+ $f -> show_element( "submit" );
+
+
+
+ echo '</td>
+
+</tr>
+
+</table>';
+
+
+
+ $f -> show_element( "E_MAIL" );
+
+
+
+$f -> finish();
+
+
+
+ }
+
+
+
+
+
+
+
+    return $cart;
+
+}
+
+
+
+function payment_edit( $post = array(), $userid, $action, $cart)
+
+
+
+{
+
+
+
+global $months;
+
+
+
+    global $years;
+
+
+
+ $elements = array( "NAME_ON_CA", "CARD_TYPE", "ShipType", "CARD_NUMBE", "EXPIRY_MONTH", "EXPIRY_YEAR" );
+
+
+
+ $f = new form;
+
+
+
+ $error = false;
+
+
+
+ $reason = "";
+
+
+
+ $reason2 = "";
+
+
+
+$card = array( "Visa" => "Visa",
+
+ "Mastercard" => "Mastercard" );
+
+
+
+ $f -> add_element( array( "type" => "select",
+
+ "name" => "CARD_TYPE",
+
+ "options" => $card,
+
+ "value" => $cart["_CARD_TYPE"]
+
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "text",
+
+ "name" => "CARD_NUMBE",
+
+ "minlength" => "1",
+
+ "length_e" => "Please enter your card number",
+
+ "value" => $cart["_CARD_NUMBE"]
+
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "select",
+
+ "name" => "EXPIRY_MONTH",
+
+ "options" => $months,
+
+ "valid_e" => "Please Choose Card Month",
+
+ "value" => $cart["_EXPIRY_MONTH"]
+
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "select",
+
+ "name" => "EXPIRY_YEAR",
+
+ "options" => $years,
+
+ "valid_e" => "Please Choose Card Year",
+
+ "value" => $cart["_EXPIRY_YEAR"]
+
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "select",
+
+ "name" => "ShipType",
+
+ "options" => shipcosts($cart["_Ship_STATE"]),
+
+ "valid_e" => "Please Choose Shipping Method",
+
+ "value" => $cart["_ShipType"]
+
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "hidden",
+
+ "name" => "E_MAIL",
+
+ "value" => $userid
+
+ ) );
+
+
+
+ $f -> add_element( array( "type" => "submit",
+
+ "src" => "next.gif",
+
+ "name" => "submit",
+
+ "value" => "Save" ) );
+
+
+
+if ( $action == 'payedit' ) {
+
+
+
+        $cart['_donepay']='true';
+
+
+
+$c = new credit_card;
+
+
+
+         $card_ok = $c -> check ( $post['CARD_NUMBE'] );
+
+
+
+         $results = $f -> validate( "ok" );
+
+
+
+ if ( $results != "ok" || $card_ok['valid'] != true || $card_ok['type'] != $post['CARD_TYPE'] ) {
+
+
+
+            $f -> load_defaults( );
+
+
+
+             $error = true;
+
+
+
+             echo '<br>Errors Detected. Please check the items below.<br>';
+
+
+
+ } else {
+
+global $CARD_TYPE;
+
+global $CARD_NUMBE;
+
+global $EXPIRY_MONTH;
+
+global $EXPIRY_YEAR;
+
+global $ShipType;
+
+$cart["_CARD_TYPE"]= $CARD_TYPE;
+
+$cart["_CARD_NUMBE"]= $CARD_NUMBE;
+
+$cart["_EXPIRY_MONTH"]= $EXPIRY_MONTH;
+
+$cart["_EXPIRY_YEAR"]=$EXPIRY_YEAR;
+
+$cart['_Shipping_code']=$ShipType;
+
+$cart['_Shipping_type']=typeship($ShipType);
+
+$cart['_Shipping_cost']=costship($ShipType);
+
+$cart['_total_price'] = calculate_price( $cart );
+
+$cart['_items'] = calculate_items( $cart );
+
+$cart['_PST'] = calculate_PST( $cart );
+
+$cart['_GST'] = calculate_GST( $cart );
+
+$cart['_grand_total'] = $cart['_total_price'] + $cart['_PST'] + $cart['_GST'] + $cart['_Shipping_cost'];
+
+
+
+order_form( $userid, $cart );
+
+
+
+             }
+
+
+
+        }
+
+
+
+if ( $error == true || $action == 'pay' || $action == '' ) {
+
+
+
+$f -> start( '', '', 'index.php?action=payedit' );
+
+
+
+if ( $error == true ) {
+
+
+
+            $test = $f -> validate( "OK", array( "NAME_ON_CA" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+                print '<font color="red">' . $test . '</font><br>';
+
+
+
+                 }
+
+
+
+            $test = $f -> validate( "OK", array( "CARD_TYPE" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+                print '<font color="red">' . $test . '</font><br>';
+
+
+
+                 }
+
+
+
+            $test = $f -> validate( "OK", array( "CARD_NUMBE" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+                print '<font color="red">' . $test . '</font><br>';
+
+
+
+                 }
+
+
+
+            $test = $f -> validate( "OK", array( "EXPIRY_MONTH" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+                print '<font color="red">' . $test . '</font><br>';
+
+
+
+                 }
+
+
+
+            $test = $f -> validate( "OK", array( "EXPIRY_YEAR" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+                print '<font color="red">' . $test . '</font><br>';
+
+
+
+                 }
+
+
+
+            if ( $card_ok['valid'] != true ) {
+
+
+
+                echo '<font color="red">Bad Credit Card Number</font><br>';
+
+
+
+                 }
+
+
+
+            if ( $card_ok['type'] != $post['CARD_TYPE'] ) {
+
+
+
+                echo '<font color="red">Your credit card identifies as a ' . $card_ok['type'] . ' not a ' . $post['CARD_TYPE'] . '</font><br>';
+
+
+
+                 }
+
+
+
+            $test = $f -> validate( "OK", array( "ShipType" ) );
+
+
+
+             if ( $test != "OK" ) {
+
+
+
+                print '<font color="red">' . $test . '</font><br>';
+
+
+
+                 }
+
+}
+
+
+
+echo '<table border="0" cellpadding="0" cellspacing="0" width="756">
+
+<tr>
+
+<td align="right" valign="bottom" class="TableMixNormal_2" colspan="2">
+
+<img src="barCHKOUT4.gif" border="0" height="20" width="255" alt="Step 2 of 3"></td>
+
+</tr>
+
+</table>
+
+<table border="0" cellpadding="2" cellspacing="0" width="756">
+
+<tr>
+
+<td align="left" valign="middle" class="TableMixNormal_2">
+
+This is the 4th step of 5.  Please enter your payment information before proceeding to step 5.</td>
+
+<td class="TableMixBold_3" align="right">&nbsp;</td>
+
+</tr>
+
+</table>
+
+<form method="POST" action=""><table border="0" cellpadding="5" cellspacing="0" width="750">
+
+<tr>
+
+
+
+<td valign="top" align="left" nowrap>
+
+<div align="center">
+
+<table border="0" cellpadding="1" cellspacing="0" width="750" class="TableMixBold_1">
+
+<tr>
+
+<td class="TableMixBold_1">Payment Information</td>
+
+<td align="right" class="TableMixBold_1">
+
+Order SubTotal:&nbsp;&nbsp;&nbsp;' . number_format( $cart['_total_price'], 2 );
+
+
+
+ echo '</td>
+
+</tr>
+
+<tr>
+
+<td colspan="2">
+
+<table border="0" cellpadding="0" cellspacing="0" width="756">
+
+<tr>
+
+<td align="left" vAlign="top" colspan="4" class="TableMixBold_3"><br>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td align="left" vAlign="top" colspan="4" class="TableMixBold_3">Note: ** Canadian Funds **&nbsp;&nbsp;&nbsp;All Fields are required.
+
+</td>
+
+</tr>
+
+<tr>
+
+<td align="left" vAlign="top" colspan="4" class="TableMixBold_3"><br>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td align="right" vAlign="middle" class="TableMixBold_3" width="120">
+
+First Name:&nbsp;</td>
+
+<td align="left" vAlign="top" class="TableMixBold_2" width="250">';
+
+
+
+echo $cart["_Bill_CUSTOMER_N"];
+
+
+
+echo '</td>
+
+<td align="right" vAlign="middle" class="TableMixBold_3" width="120">
+
+Last Name:&nbsp;</td>
+
+<td align="left" vAlign="top" class="TableMixBold_2" width="250">';
+
+
+
+echo $cart["_Bill_CUSTOMER_F"];
+
+
+
+echo '</td>
+
+</tr>
+
+<tr>
+
+<td align="right" vAlign="middle" class="TableMixBold_3" width="120" nowrap>
+
+Credit Card Type:&nbsp;</td>
+
+<td align="left" vAlign="top" class="TableMixNormal_3" width="250">';
+
+
+
+ $f -> show_element( "CARD_TYPE" );
+
+
+
+ echo '</td>
+
+<td align="right" vAlign="middle" class="TableMixBold_3" width="120">
+
+Card Number:&nbsp;</td>
+
+<td align="left" vAlign="top" class="TableMixNormal_3" width="250">';
+
+
+
+ $f -> show_element( "CARD_NUMBE" );
+
+
+
+ // echo '<tr><td colspan=2><i>Use 5412-3456-7890-1034 for MC<br>and 4500-3456-7890-1238 for V</i>';
+
+        // echo '</td></tr>';
+
+
+
+        echo '</td>
+
+</tr>
+
+<tr>
+
+<td align="right" vAlign="middle" class="TableMixBold_3" width="120">
+
+&nbsp;</td>
+
+<td align="left" vAlign="top" class="TableMixNormal_3" width="250">';
+
+
+
+// $f -> show_element( "EXPIRY_MONTH" );
+
+
+
+ echo '</td>
+
+<td align="right" vAlign="middle" class="TableMixBold_3" width="120">
+
+Expiration Date:&nbsp;</td>
+
+<td align="left" vAlign="top" class="TableMixNormal_3" width="250">';
+
+
+ $f -> show_element( "EXPIRY_MONTH" );
+ $f -> show_element( "EXPIRY_YEAR" );
+
+
+
+echo '</tr>
+
+<tr>
+
+<td align="right" vAlign="middle" class="TableMixBold_3" width="120">
+
+Shipping Method:&nbsp;</td>
+
+<td align="left" vAlign="top" class="TableMixNormal_3" width="620" colspan="3">';
+
+
+
+ $f -> show_element( "ShipType" );
+
+
+
+echo '<br></td>
+
+</tr>
+
+<tr>
+
+<td align="center" vAlign="top" colspan="4" class="TableMixBold_3"> <br>
+
+The Shipping costs quoted in the pull-down are based upon your location for a package<br> 10cm x 15cm x 25cm.  Additional costs may be charged for larger packages.</td>
+
+</tr>
+
+
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</div>
+
+</td>
+
+</tr>
+
+</table>
+
+</td></tr></table>
+
+<div align="left">
+
+<table border="0" cellpadding="0" cellspacing="0" width="756">
+
+<tr>
+
+<td align="right" valign="top">
+
+<table border="0" cellpadding="1" cellspacing="1" width="200" bgcolor="#ffffff">
+
+<tr>
+
+<td><a href="index.php?action=bill"><img src="last.gif" border="0" alt="Previous Step"  width="100" height="18"></a></td>
+
+<td>';
+
+
+
+ $f -> show_element( "submit" );
+
+
+
+ echo '</td>
+
+</tr>
+
+</table>';
+
+
+
+ $f -> finish();
+
+
+
+}
+
+
+
+    if ( $error == false && $action == 'billedit' ) {
+
+
+
+if ( $post['CUSTOMER_I'] != '' ) {
+
+
+
+$query = "update contact set CUSTOMER_N='" . $post['CUSTOMER_N'] . "' , CUSTOMER_F='" . $post['CUSTOMER_F'] . "' ,
+
+STREET_ADD='" . $post['STREET_ADD'] . "' , CITY='" . $post['CITY'] . "' , STATE='" . $post['STATE'] . "' , ZIP_CODE='" . $post['ZIP_CODE'] . "' , COUNTRY='" . $post['COUNTRY'] . "' , PHONE_NUMB='" . $post['PHONE_NUMB'] . "' , E_MAIL='" . $post['E_MAIL'] . "' ,CARD_TYPE='" . $post['CARD_TYPE'] . "' , CARD_NUMBE='" . $post['CARD_NUMBE'] . "' , NAME_ON_CA='" . $post['NAME_ON_CA'] . "' , EXPIRY_DAT='" . $post['EXPIRY_DAT'] . "' , SHIPPING_N='" . $post['SHIPPING_N'] . "' , SHIPPING_F='" . $post['SHIPPING_F'] . "' , SHIPPING_A='" . $post['SHIPPING_A'] . "' , SHIPPING_C='" . $post['SHIPPING_C'] . "' , SHIPPING_S='" . $post['SHIPPING_S'] . "' , SHIPPING_Z='" . $post['SHIPPING_Z'] . "' , SHIPPING_Y='" . $post['SHIPPING_Y'];
+
+
+
+if ( $post['pass2'] != '' ) {
+
+
+
+$query = $query . "' , PASSWORD='" . $post['pass2'];
+
+
+
+ }
+
+
+
+$query = $query . "' where CUSTOMER_I = '" . $post['CUSTOMER_I'] . "'";
+
+
+
+ } else {
+
+
+
+$query = "insert into contact values ('', '" . $post['CUSTOMER_N'] . "' , '" . $post['CUSTOMER_F'] . "' , '" . $post['STREET_ADD'] . "' , '" . $post['CITY'] . "' , '" . $post['STATE'] . "' , '" . $post['ZIP_CODE'] . "' , '" . $post['COUNTRY'] . "' , '" . $post['PHONE_NUMB'] . "' , '" . $post['E_MAIL'] . "' ,'" . $post['password'] . "' , '', '" . $post['CARD_TYPE'] . "' , '" . $post['CARD_NUMBE'] . "' , '" . $post['NAME_ON_CA'] . "' , '" . $post['EXPIRY_DAT'] . "' , '" . $post['SHIPPING_N'] . "' , '" . $post['SHIPPING_F'] . "' , '" . $post['SHIPPING_A'] . "' , '" . $post['SHIPPING_C'] . "' , '" . $post['SHIPPING_S'] . "' , '" . $post['SHIPPING_Z'] . "' , '" . $post['SHIPPING_Y'] . "' , '')";
+
+
+
+ }
+
+
+
+if ( $error == false ) {
+
+
+
+$result = mysql_query( $query ) or die ( print mysql_error() );
+
+
+
+ $email = $post['E_MAIL'];
+
+
+
+ $query = "select CUSTOMER_I from contact where E_MAIL like '$email'";
+
+
+
+ $result = @mysql_query( $query );
+
+
+
+ $row = mysql_fetch_array( $result );
+
+
+
+ $usernum = $row["CUSTOMER_I"];
+
+
+
+}
+
+
+
+}
+
+return $cart;
+
+    }
+
+function shipcosts($state){
+
+
+
+	$Costs['0']=array("value"=>'', "label"=>'Select a Shipping Method');
+
+	$results=mysql_query("SELECT `Discription`,`Cost`,`Code` FROM `shipping` WHERE 1 AND `Province` LIKE '$state';") or die (print mysql_error());
+
+	while ($row=mysql_fetch_array($results)){
+
+		$Code=$row['Code'];
+
+		$Name=$row['Discription'].' - '.$row['Cost'];
+
+		$Costs[$Code]=array("value"=>$Code, "label"=>$Name);
+
+	}
+
+return $Costs;
+
+}
+
+function typeship($ShipType){
+
+	$results=mysql_query("SELECT `Discription` FROM `shipping` WHERE 1 AND `Code` LIKE '$ShipType';") or die (print mysql_error());
+
+$row=mysql_fetch_array($results);
+
+return $row['Discription'];
+
+}
+
+function costship($ShipType){
+
+	$results=mysql_query("SELECT `Cost` FROM `shipping` WHERE 1 AND `Code` LIKE '$ShipType';") or die (print mysql_error());
+
+$row=mysql_fetch_array($results);
+
+return $row['Cost'];
+
+}
+
+?>

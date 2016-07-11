@@ -1,0 +1,14 @@
+<?php
+echo '<html>';
+echo '<link href="includes/trg_style.css" rel="stylesheet" type="text/css">';
+echo '<body bgcolor="#FFFFFF">';
+echo '<table width=100%>';
+echo '<tr><td width=15% valign=top rowspan=1>';
+echo '<table width=100%>';
+echo '<tr><td width=100%><a href="index.php">Home</a></td></tr>';
+echo '<tr><td><a href="index.php?action=browse">Browse</a></td></tr>';
+echo '<tr><td><a href="index.php?action=search">Search</a></td></tr>';
+echo '<tr><td><a href="index.php?action=cart">View Cart</a></td></tr>';
+echo '</table>';
+echo '</td><td rowspan=2 valign=top>';
+?>

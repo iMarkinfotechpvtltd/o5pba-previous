@@ -1,0 +1,14 @@
+
+99.237.194.239-CPE001ff3444d0d-CM000f9faa6d22.cpe.net.cable.rogers.com | average.csv | 61.38 KB | 09/19/2011 | 12:05:07 AM
+99.237.194.239-CPE001ff3444d0d-CM000f9faa6d22.cpe.net.cable.rogers.com | average.csv | 61.38 KB | 09/19/2011 | 12:13:14 AM
+99.237.194.239-CPE001ff3444d0d-CM000f9faa6d22.cpe.net.cable.rogers.com | average.csv | 76.9 KB | 09/19/2011 | 12:21:36 AM
+99.237.194.239-CPE001ff3444d0d-CM000f9faa6d22.cpe.net.cable.rogers.com | average.csv | 61.38 KB | 09/19/2011 | 12:22:18 AM
+99.237.194.239-CPE001ff3444d0d-CM000f9faa6d22.cpe.net.cable.rogers.com | average.csv | 63.57 KB | 09/19/2011 | 12:22:56 AM
+174.112.24.135-CPE000f66010fee-CM000a7362b6e5.cpe.net.cable.rogers.com | average.csv | 76.9 KB | 09/19/2011 | 02:55:33 PM
+99.237.194.239-CPE001ff3444d0d-CM000f9faa6d22.cpe.net.cable.rogers.com | average.csv | 61.38 KB | 09/19/2011 | 10:28:01 PM
+99.237.194.239-CPE001ff3444d0d-CM000f9faa6d22.cpe.net.cable.rogers.com | average.csv | 63.57 KB | 09/19/2011 | 10:28:59 PM
+99.237.194.239-CPE001ff3444d0d-CM000f9faa6d22.cpe.net.cable.rogers.com | average.csv | 18.72 KB | 09/19/2011 | 10:38:29 PM
+99.237.194.239-CPE001ff3444d0d-CM000f9faa6d22.cpe.net.cable.rogers.com | average.csv | 30.59 KB | 09/19/2011 | 10:54:48 PM
+99.237.194.239-CPE001ff3444d0d-CM000f9faa6d22.cpe.net.cable.rogers.com | average.csv | 74.09 KB | 09/19/2011 | 11:16:09 PM
+99.237.194.239-CPE001ff3444d0d-CM000f9faa6d22.cpe.net.cable.rogers.com | average.csv | 36.75 KB | 09/19/2011 | 11:58:11 PM
+99.237.194.239-CPE001ff3444d0d-CM000f9faa6d22.cpe.net.cable.rogers.com | average.csv | 94.82 KB | 09/19/2011 | 11:59:50 PM

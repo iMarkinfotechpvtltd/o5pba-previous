@@ -1,0 +1,6 @@
+
+69.17.186.43-xtreme-27-43.dyn.aci.on.ca | average.csv | 889.6 KB | 10/16/2007 | 02:56:32 PM
+99.247.107.159-CPE000625861248-CM00e06f18bd8c.cpe.net.cable.rogers.com | average.csv | 889.6 KB | 10/16/2007 | 03:35:34 PM
+99.247.107.159-CPE000625861248-CM00e06f18bd8c.cpe.net.cable.rogers.com | average.csv | 889.6 KB | 10/16/2007 | 03:38:31 PM
+99.247.107.159-CPE000625861248-CM00e06f18bd8c.cpe.net.cable.rogers.com | average.csv | 889.6 KB | 10/16/2007 | 03:47:07 PM
+99.247.107.159-CPE000625861248-CM00e06f18bd8c.cpe.net.cable.rogers.com | average.csv | 889.6 KB | 10/16/2007 | 03:51:17 PM

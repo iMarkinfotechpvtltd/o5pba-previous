@@ -1,0 +1,79 @@
+<?php
+	if (file_exists('./menu.inc')) {
+		include ('./menu.inc');
+	} 
+?>
+<table class="w100 tournament" border=0>
+	<tr>
+<td colspan=4 class="w100">
+<center>
+<? if (isset($season)) echo $season." Season"; ?>
+</center>
+</td>
+</tr>
+<tr>
+<td height=35 colspan=4 class="w90 tournament" bgcolor="#F22F2F">
+<center>
+<p><font size="4"><b><?php echo $this->db->f('title'); ?></b></font></p>
+</center>
+</td>
+</tr>
+
+<tr><? $this->title($this->db->f('created').'_f','<td class="w40" bgcolor="#F22F2F"><font size="2"> Format:</font><br>','<td>'); ?>
+
+</td><td rowspan=7 width=20></td>
+<? $this->title(array($this->db->f('created').'_i',$this->db->f('created').'_iz',$this->db->f('created').'_ir',$this->db->f('created').'_ip',$this->db->f('created').'_in'),'<td bgcolor="#F22F2F" colspan=2><font size="2"> Information:</font>','<td>'); ?>
+
+</td></tr>
+
+<tr><td>
+<?php
+$this->listitems($this->db->f('created').'_f');
+?>
+</td><td rowspan=5 colspan=2>
+<?php
+$this->listitems($this->db->f('created').'_i','General');
+
+$this->listitems($this->db->f('created').'_iz','Zone / DC');
+
+$this->listitems($this->db->f('created').'_ir','Regionals');
+
+$this->listitems($this->db->f('created').'_ip','Provincial');
+
+$this->listitems($this->db->f('created').'_in','Nationals');
+
+?>
+</td></tr>
+
+<tr><? $this->title($this->db->f('created').'_d','<td bgcolor="#F22F2F"><font size="2">Dates:</font>','<td>'); ?>
+
+</td></tr>
+<tr><td>
+<?php
+$this->listdates($this->db->f('created').'_d');
+
+ ?>
+</td></tr>
+<tr><td <? $this->resultstitle($this->db->f('created'), 'bgcolor="#F22F2F">'); ?><br>
+</td></tr>
+<tr><td rowspan=3>
+<?php
+$this->listitems($this->db->f('created').'_z','Zone');
+
+$this->listitems($this->db->f('created').'_r','Regionals');
+
+$this->listitems($this->db->f('created').'_p','Provincial');
+
+$this->listitems($this->db->f('created').'_n','Nationals');
+
+$this->listitems($this->db->f('created').'_m','Minutes');
+
+?>
+ </td></tr><tr><?php
+$this->photoitems($this->db->f('created').'_ph','<td bgcolor="#F22F2F"><font size="2"> Photo Album:</td></tr><tr><td></td><td>');
+
+?>
+ 
+</td></tr>
+
+</table>

@@ -1,0 +1,11 @@
+<h1>Permission denied</h1>
+
+  To access this page, the following permissions are required: 
+  <b><?php print $must_have ?></b>.<br>
+  
+  I won't let you access this page, because you have these permissions:
+  <b><?php print $does_have ?></b>.<p>
+
+<?php
+include_once($htdocsdir.'includes/bottom.php');
+?>

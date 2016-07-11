@@ -1,0 +1,18 @@
+Subject: Welcome to the Mailing List
+
+Hello #%name%#,
+
+Welcome to the O5PBA Newsletter Mailing List. Please 
+take a moment to review this message.
+
+
+Username: #%username%#
+Password: #%password%#
+Email address: #%email%#
+
+If you do not wish to belong to this list, you may 
+unsubscribe anytime by going to the following url: 
+
+http://www.o5pba.ca/newsletter/subscribe.php?action=login
+
+O5 Newsletter Admin

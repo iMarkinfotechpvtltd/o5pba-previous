@@ -1,0 +1,9 @@
+Subject: Your Membership
+
+Someone (probably you) just joined our maillist with this email address. To confirm this submission, please go to 
+
+#%confirm_url%#
+
+Please confirm your submission as soon as possible. Un-confirmed accounts are automatically deleted after 7 days.
+
+O5 Newsletter Admin

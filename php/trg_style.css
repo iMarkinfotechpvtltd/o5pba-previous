@@ -1,0 +1,75 @@
+BODY, BODY.home, P, FONT, A, TABLE, TD, TR, TH {
+font-size: 12pt;
+font-family: Times New Roman, "Times New Roman";
+text-align: justify;
+vertical-align: top }
+
+P.spacedAndBig { 
+padding: 2em;
+font-size: 18pt;
+text-align: center }
+
+P.setMiddle { 
+text-align: center }
+
+P.white { 
+color: white }
+
+BODY { 
+background-color: white;
+background-image: url("bg/standard.jpg");
+background-repeat: repeat-y }
+
+BODY.home { 
+text-align: center;
+background: white }
+
+TABLE.center {
+text-align: center }
+
+TABLE.spaced { 
+padding: 2em }
+
+TABLE.lowSpaced { 
+padding: 1em }
+
+TH { 
+padding: 4px;
+background-color: #C9C9C9;
+color: black }
+
+TD { 
+text-align: left }
+
+TD.setRightSmall { 
+text-align: right;
+font-size: 8pt }
+
+TD.setRight { 
+text-align: right }
+
+TD.setRightBold { 
+text-align: right;
+font-weight: bold }
+
+TD.setMiddle { 
+text-align: center;
+font-size: 36pt }
+
+TD.setMiddleNormal { 
+text-align: center }
+
+A:link { 
+text-align: center;
+color: blue;
+text-decoration: none }
+
+A:visited { 
+text-align: center;
+color: red;
+text-decoration: none }
+
+A:active { 
+text-align: center;
+color: yellow;
+text-decoration: none }

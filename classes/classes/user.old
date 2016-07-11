@@ -1,0 +1,326 @@
+<?
+class users{
+	var $form;
+	
+	function users($user_id=''){
+		global $auth;
+		
+		$db=new DB;
+		
+		if ($user_id){
+			$db->query(sprintf('select * from auth where user_id like "%s"',$user_id));
+			$db->next_record();
+		}
+		
+		$this->form= new form;
+		
+		$this->form->add_element(array("type"=>"text",
+		"name"=>"iduser",
+		"valid_regex"=>"^[a-z]*$",
+		"valid_e"=>"Username is lowercase letters only.",
+		"minlength"=>"1",
+		"length_e"=>"Username length error.",
+		"value"=>$db->f('username'),
+		"icase"=>1));
+		$this->form->add_element(array("type"=>"text",
+		"name"=>"pass",
+		"valid_regex"=>"^[a-z0-9A-Z]*$",
+		"valid_e"=>"Alphanumaric only.",
+		"minlength"=>"1",
+		"length_e"=>"Password length error.",
+		"value"=>$db->f('PASSWORD'),
+		"icase"=>1,
+		"pass"=>1));
+		$this->form->add_element(array("type"=>"text",
+		"name"=>"pass2",
+		"valid_regex"=>"^[a-z0-9A-Z]*$",
+		"valid_e"=>"Alphanumaric only.",
+		"minlength"=>"1",
+		"length_e"=>"Password length error.",
+		"value"=>$db->f('PASSWORD'),
+		"icase"=>1,
+		"pass"=>1));
+		$this->form->add_element(array("type"=>"hidden",
+		"name"=>"function",
+		"value"=>'user_validate'
+		));
+		$this->form->add_element(array("type"=>"hidden",
+		"name"=>"id",
+		"value"=>$user_id
+		));
+		$this->form->add_element(array("type"=>"submit",
+		"name"=>"submitnu",
+		"value"=>"Process"
+		));
+		
+		$current=' '.$db->f('perms').',';
+		
+		$perms=new O5Perm();
+		
+		if (strtolower($db->f('username'))==strtolower($auth->auth['uname'])){
+			foreach ($perms->permissions as $name=>$value){
+				if (strpos($current,$name.',')){
+					$n='perms['.$name.']';
+					$v=$name;
+				}else{
+					$n='p[]';
+					$v='';
+				}
+				$this->form->add_element(array("type"=>"hidden",
+				"name"=>$n,
+				"value"=>$v
+				));
+			}
+			
+		}else{
+			foreach ($perms->permissions as $name=>$value){
+				$n='perms['.$name.']';
+				$this->form->add_element(array("type"=>"checkbox",
+				"name"=>$n,
+				"value"=>$name,
+				"checked"=>strpos($current,$name.',')
+				));
+			}
+		}
+		
+	}
+	
+	function edituser($user_id){
+		
+		$db=new DB;
+		
+		if ($user_id){
+			$db->query(sprintf('select * from auth where user_id like "%s"',$user_id));
+			
+		}
+		
+		if ($db->num_rows()||$user_id==''){
+			$this->users($user_id);
+			
+			$this->formuser();
+		}else{
+			$this->listuser();
+		}
+	}
+	
+	function formuser($validate=false){
+		$this->form->start();
+                ?>
+                <table border="0" cellpadding="2" cellspacing="0" width=300>
+				  <tr>
+				  	<td colspan=2 class=dark width=300>
+  		                <p align="center">Edit User</p>
+					</td>
+                  </tr>
+                
+                  <tr>
+                      <td class=dark style='vertical-align:middle; text-align:right;'>Username</td>
+                      <td class=light>
+                      <? 
+                      $this->form->show_element("iduser");
+                      if(($validate)&&($test=$this->form->validate(false,array('user')))){
+                      	echo '<br><font color="red">'.$test.'</font>';
+                      }
+                       ?></td>
+                  </tr>
+                  <tr>
+                      <td class=dark style='vertical-align:middle; text-align:right;'>Password</td>
+                      <td class=light>
+                      <?
+                       $this->form->show_element("pass");
+                       if(($validate)&&($test=$this->form->validate(false,array('pass')))){
+                       	echo '<br><font color="red">'.$test.'</font>';
+                       }
+                      ?></td>
+                  </tr>
+                  <tr>
+                      <td class=dark style='vertical-align:middle; text-align:right;'>Retype Password</td>
+                      <td class=light>
+                      <?
+                      $this->form->show_element("pass2");
+                      if(($validate)&&($test=$this->form->validate(false,array('pass2')))){
+                      	echo '<br><font color="red">'.$test.'</font>';
+                      }
+                      ?></td>
+                  </tr>
+                  <tr>
+                      <td class=dark style='vertical-align:middle; text-align:right;'>Permissions</td>
+                      <td class=light>
+
+                  <?
+                      $perms=new O5Perm();
+                      foreach ($perms->permissions as $name=>$value){
+                      	if ($name!='admin'){
+                      		
+                      		$n='perms['.$name.']';
+                      		
+                      		$this->form->show_element($n);
+                      		echo $name.'<br>';
+                      	}
+                      }
+                      $this->form->show_element("function");
+                      ?></td>
+                  </tr>
+                  <tr>
+                      <td colspan="2" class=light style='vertical-align:middle; text-align:center;'><? $this->form->show_element("submitnu"); ?></td>
+                  </tr>
+                </table>
+                <?
+                      $this->form->finish();
+                      
+	}
+	
+	function validateuser(){
+		
+		if($this->form->validate()){
+			$this->form->load_defaults();
+			
+			$this->formuser(true);
+		}else{
+			$user_id=$_POST['id'];
+			
+			if (($_POST['pass']!= $_POST['pass2']) && $user_id==''){
+				$this->form->load_defaults();
+				
+				echo '<br><font color="red">Passwords do not match</font>';
+				
+				$this->formuser(true);
+				
+			}else{
+				@ $perm=join($_POST['perms'],',');
+				
+				$db=new DB;
+				$db->query(sprintf('delete from active_sessions where sid like "%s"',$user_id));
+				
+				if ($user_id){
+					$db->query(sprintf('select * from auth where user_id like "%s"',$user_id));
+					
+					$db->next_record();
+					
+					if ($db->f('PASSWORD')==$_POST['pass']){
+						$query=sprintf('update auth set username = "%s", perms = "%s" where user_id = "%s"',$_POST['iduser'],$perm,$user_id);
+					}else{
+						$query=sprintf('update auth set username = "%s", perms = "%s", PASSWORD = "%s" where user_id = "%s"',$_POST['iduser'],md5($_POST['pass']),$perm,$user_id);
+					}
+				}else{
+					$db->query(sprintf('select * from auth where user_id like "%s"',$_POST['iduser']));
+					if( $db->num_rows()){
+						echo '<br><font color="red">User Name exists.</font>';
+						$this->form->load_defaults();
+						$this->formuser(true);
+						break;
+					}else {
+						$query=sprintf('insert into auth (user_id,username,PASSWORD,perms) values ("%s","%s","%s","%s");', md5(uniqid(rand(),1)),$_POST['iduser'], md5($_POST['pass']), $perm);
+					}
+				}
+				
+				$db->query($query);
+				
+				global $page;
+				
+				$this->listuser();
+			}
+		}
+	}
+	function listuser(){
+		global $auth;
+		$db=new DB;
+		
+		$db->query('select * from auth where username not like "winston";');
+		echo '<h4>Edit Users</h4>';
+		echo '<table border="0" cellpadding="2" cellspacing="0" width="500">';
+		echo '<tr class=dark><td colspan=2 width=200>Username</td><td colspan=2 width=300>Able to Edit:</td></tr>';
+		while($db->next_record()){
+			if (strtolower($db->f('username'))==strtolower($auth->auth['uname'])){
+				echo sprintf('<tr class=light><td width=60><a href="?function=user_edit&id=%s">Edit</a></td><td width=140>%s</td><td width=240>%s</td><td width=60>&nbsp;</td></tr>',$db->f('user_id'),$db->f('username'),$db->f('perms'));
+			}else{
+				echo sprintf('<tr class=light><td width=60><a href="?function=user_edit&id=%s">Edit</a></td><td width=140>%s</td><td width=240>%s</td><td width=60><a href="javascript:confirmDelete(\'%s\',\'?function=user_delete&id=%s\');">Delete</a></td></tr>',$db->f('user_id'),$db->f('username'),$db->f('perms'),$db->f('username'),$db->f('user_id'));
+			}
+		}
+		echo'<tr class=light><td colspan=4><a href="?function=user_new">Add User</a></td></tr>';
+		echo '</table>';
+	}
+	
+	function deleteuser($user_id){
+		
+		$db=new DB;
+		
+		$db->query(sprintf('delete from auth where user_id like "%s";',$user_id));
+		
+		$this->listuser();
+	}
+	
+}
+
+class usermanager{
+	var $db;
+	var $users=array();
+	
+	function usermanager(){
+		$this->db = new DB;
+		$this->db->query('SELECT user_id FROM auth WHERE username!="winston"');
+		while($this->db->next_record()){
+			array_push($this->users,new auser($this->db->f('user_id')));
+		}
+	}
+	
+	function getuser($id){
+		foreach($this->users as $theuser){
+			if($theuser->user_id==$id) return $theuser;	
+		}
+		return false;
+	}
+	function checkname($name){
+		foreach ($this->users as $user){
+			if($user->name == $name) return true;	
+		}
+		return false;
+	}
+	
+	function adduser($user){
+		$this->db->query(sprintf('INSERT INTO auth VALUES("%s","%s","%s","%s")',md5(uniqid('mountthefloopy')),$user->name,md5($user->pass),$this->permstostring($user->perms)));	
+	}
+	
+	function updateuser($user){
+		$this->db->query(sprintf('UPDATE auth SET PASSWORD="%s",perms="%s" WHERE user_id="%s"',$user->pass,$this->permstostring($user->perms),$user->user_id));		
+		/*if($this->db->affected_rows()!=1){
+			$this->adduser($user);
+		}
+		*/
+	} 
+	
+	function deleteuser($id){
+		$this->db->query(sprintf('DELETE FROM auth WHERE user_id="%s"',$id));
+	}
+	
+	function permstostring($perms){
+		$string='';
+		foreach($perms as $perm){
+			$string.=$perm.',';
+		}
+		return substr($string,0,-1);
+	}
+}
+class auser{
+	var $user_id;
+	var $name;
+	var $pass;
+	var $perms=array();
+	var $db;
+	
+	function auser($thisid=''){
+		$this->db = new DB;
+		if($thisid!=''){
+			$this->db->query(sprintf('SELECT * FROM auth WHERE user_id="%s"',$thisid));
+			if($this->db->num_rows()==1){
+				$this->db->next_record();
+				$this->user_id = $this->db->f('user_id');
+				$this->name = $this->db->f('username');
+				$this->pass = $this->db->f('PASSWORD');
+				$this->perms = split(',',$this->db->f('perms'));	
+			}
+		}
+	}
+}
+
+?>

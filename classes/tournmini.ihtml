@@ -1,0 +1,38 @@
+<?php
+	if (file_exists('./menu.inc')) {
+		include ('./menu.inc');
+	} 
+?>
+<table width=800 border=0>
+	<tr>
+<td colspan=4 width='800'>
+<center>
+<? if (isset($season)) echo $season." Season"; ?>
+</center>
+</td>
+</tr>
+<tr>
+<td height=35 colspan=4 width="800" bgcolor="#F22F2F">
+<center>
+<p><font size="4"><b><?php echo $this->db->f('title'); ?></b></font></p>
+</center>
+</td>
+</tr>
+
+<tr>
+	<td style="background-color:#F22F2F;"><font size="2"><? $this->resultstitle($this->db->f('created')); ?></font></td>
+	<td style="background-color:#F22F2F;"><font size="2">Photo Album:</font></td>
+</tr>
+<tr>
+	<td>
+<?php
+$this->listitems($this->db->f('created').'_p','');
+
+echo "</td><td>";
+$this->photoitems($this->db->f('created').'_ph','');
+
+?>
+ 
+</td></tr>
+
+</table>

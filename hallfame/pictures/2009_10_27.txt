@@ -1,0 +1,4 @@
+
+174.114.192.82-CPE00164158f7c5-CM0011ae90cad0.cpe.net.cable.rogers.com | average.csv | 969.98 KB | 10/27/2009 | 08:06:25 PM
+174.114.192.82-CPE00164158f7c5-CM0011ae90cad0.cpe.net.cable.rogers.com | average.csv | 975.13 KB | 10/27/2009 | 08:18:47 PM
+99.237.84.194-CPE001ff33e5be9-CM000f9faa6d22.cpe.net.cable.rogers.com | average.csv | 960.57 KB | 10/27/2009 | 08:43:17 PM
